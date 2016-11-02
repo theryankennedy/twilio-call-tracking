@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  .row
+    .col-lg-4
+      table.table
+        thead
+          tr
+            th Phone number
+            th State
+        tbody
+          each lead in leads
+            tr
+              td= lead.callerNumber
+              td= 'CA'
+               
