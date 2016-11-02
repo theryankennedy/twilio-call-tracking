@@ -15,6 +15,9 @@ exports.webRoutes = function(router) {
   router.get('/dashboard', dashboard.show);
   router.get('/lead/summary-by-lead-source', leads.leadsByLeadSource);
   router.get('/lead/summary-by-city', leads.leadsByCity);
+  router.get('/leadsdata', leads.getLeads);
+  router.get('/leads', leads.show);
+
 };
 
 exports.webhookRoutes = function(router) {
