@@ -24,6 +24,18 @@ var LeadSchema = new mongoose.Schema({
   callerName: {
     type: String, 
     required: false
+  },
+  blacklisted: {
+    type: String,
+    required: true
+  },
+  blacklistedReason: {
+    type: String,
+    required: false
+  },
+  recordingURL: {
+    type: String,
+    required: false
   }
 });
 

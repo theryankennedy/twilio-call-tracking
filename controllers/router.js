@@ -19,4 +19,5 @@ exports.webRoutes = function(router) {
 
 exports.webhookRoutes = function(router) {
   router.post('/lead', leads.create);
+  router.post('/recordings', leads.addRecording);
 };

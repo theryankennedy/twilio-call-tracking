@@ -7,12 +7,21 @@ var config = require('../config');
 
 exports.create = function(request, response) {
   var leadSourceNumber = request.body.To;
-
+  var addOnResults = JSON.parse(request.body.AddOns);
+  var spamResults = addOnResults.results['marchex_cleancall'];
+  
   LeadSource.findOne({
     number: leadSourceNumber
   }).then(function(foundLeadSource) {
     var twiml = new twilio.TwimlResponse();
-    twiml.dial(foundLeadSource.forwardingNumber);
+    if (spamResults.result.result.recommendation == 'PASS') {
+      twiml.dial({
+            record:'record-from-answer',
+            recordingStatusCallback: 'http://chelsea.ngrok.io/recordings'
+        }, foundLeadSource.forwardingNumber);  
+    } else {
+      twiml.hangup();
+    }
     response.send(twiml.toString());
 
     var newLead = new Lead({
@@ -21,13 +30,26 @@ exports.create = function(request, response) {
       leadSource: foundLeadSource._id,
       city: request.body.FromCity,
       state: request.body.FromState,
-      callerName: request.body.CallerName
+      callerName: request.body.CallerName,
+      blacklisted: spamResults.result.result.recommendation,
+      blacklistedReason: spamResults.result.result.reason,
+      recordingURL: ''
     });
 
     return newLead.save();
   }).catch(function(err) {
     console.log('Failed to forward call:');
     console.log(err);
+  });
+};
+
+exports.addRecording = function(request, response) {
+  Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
+    foundLead.recordingURL = request.body.RecordingUrl;
+    console.log(foundLead);
+    return foundLead.save();
+  }).catch(function(error) {
+    return response.status(500).send('Could not save the lead source');
   });
 };
 
@@ -49,3 +71,4 @@ exports.leadsByCity = function(request, response) {
     response.send(statsByCity);
   });
 };
+

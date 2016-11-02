@@ -1,10 +1,6 @@
 # Call tracking with Twilio, Node.js, and Express
 
 
-Hello!!! From Purva
-hi everybody, love ryan
-hi from chelsea!
-
 [![Build Status](https://travis-ci.org/TwilioDevEd/call-tracking-node.svg?branch=master)](https://travis-ci.org/TwilioDevEd/call-tracking-node)
 
 This application demostrates how to use Twilio track calls and measure
