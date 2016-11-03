@@ -36,6 +36,14 @@ var LeadSchema = new mongoose.Schema({
   recordingURL: {
     type: String,
     required: false
+  },
+   callDuration: {
+    type: String,
+    required: false
+  },
+  createdOn: {
+    type: Date,
+    required: false
   }
 });
 

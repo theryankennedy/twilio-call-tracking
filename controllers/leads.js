@@ -12,7 +12,8 @@ exports.create = function(request, response) {
   var spamResults = addOnResults.results['marchex_cleancall'];
   
 
-  //console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
+ // console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
+ console.log(request.body);
 
   LeadSource.findOne({
     number: leadSourceNumber
@@ -31,7 +32,7 @@ exports.create = function(request, response) {
     if (spamResults.result.result.recommendation == 'PASS') {
       twiml.dial({
             record:'record-from-answer',
-            recordingStatusCallback: 'http://chelsea.ngrok.io/recordings'
+            recordingStatusCallback: config.baseUrl + '/recordings'
         }, foundLeadSource.forwardingNumber);  
     } else {
       twiml.hangup();
@@ -51,7 +52,9 @@ exports.create = function(request, response) {
       callerName: request.body.CallerName,
       blacklisted: spamResults.result.result.recommendation,
       blacklistedReason: spamResults.result.result.reason,
-      recordingURL: ''
+      recordingURL: '',
+      callDuration: '',
+      createdOn: new Date()
     });
 
     return newLead.save();
@@ -65,6 +68,16 @@ exports.create = function(request, response) {
 exports.addRecording = function(request, response) {
   Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
     foundLead.recordingURL = request.body.RecordingUrl;
+    foundLead.callDuration = request.body.CallDuration;
+    console.log(foundLead);
+    return foundLead.save();
+  }).catch(function(error) {
+    return response.status(500).send('Could not save the lead source');
+  });
+};
+
+exports.voicetranscribe = function(request, response) {
+  Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
     console.log(foundLead);
     return foundLead.save();
   }).catch(function(error) {

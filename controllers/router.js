@@ -17,6 +17,8 @@ exports.webRoutes = function(router) {
   router.get('/lead/summary-by-city', leads.leadsByCity);
   router.get('/leadsdata', leads.getLeads);
   router.get('/leads', leads.show);
+  router.post('/voicetranscribe', leads.voicetranscribe);
+  
 
 };
 
