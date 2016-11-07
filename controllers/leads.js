@@ -10,7 +10,7 @@ exports.create = function(request, response) {
 
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
-  
+
 
  // console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
  console.log(request.body);
@@ -22,8 +22,12 @@ exports.create = function(request, response) {
     // TODO: CALL ROUTING
 
     // known users go to pros
+    // - check the db for an existing lead based on the phone number
 
-    // new users go to ivr
+    // if it's a new number
+    //  - check the description
+    //  - if it's a
+
 
     // client
 
@@ -33,7 +37,7 @@ exports.create = function(request, response) {
       twiml.dial({
             record:'record-from-answer',
             recordingStatusCallback: config.baseUrl + '/recordings'
-        }, foundLeadSource.forwardingNumber);  
+        }, foundLeadSource.forwardingNumber);
     } else {
       twiml.hangup();
     }
@@ -117,4 +121,3 @@ exports.show = function(request, response) {
     });
   });
 };
-
