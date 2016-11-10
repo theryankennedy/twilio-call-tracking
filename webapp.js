@@ -44,13 +44,13 @@ var webRouter = express.Router();
 var webhookRouter = express.Router();
 
 // Add CSRF protection for web routes
-if (process.env.NODE_ENV !== 'test') {
-  webRouter.use(csurf());
-  webRouter.use(function(request, response, next) {
-    response.locals.csrftoken = request.csrfToken();
-    next();
-  });
-}
+// if (process.env.NODE_ENV !== 'test') {
+//   webRouter.use(csurf());
+//   webRouter.use(function(request, response, next) {
+//     response.locals.csrftoken = request.csrfToken();
+//     next();
+//   });
+// }
 
 routes.webhookRoutes(webhookRouter);
 routes.webRoutes(webRouter);

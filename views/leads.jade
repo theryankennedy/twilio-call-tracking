@@ -15,6 +15,7 @@ block content
             th Blacklisted
             th Blacklisted reason
             th Recording
+            th Transcription
         tbody
           each lead in leads
             tr
@@ -33,5 +34,6 @@ block content
               else
                 audio(controls='')
                   source(src='#{lead.recordingURL}', type='audio/mpeg')
+            td= lead.transcribeText
 
 

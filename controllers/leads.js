@@ -1,6 +1,6 @@
 var twilio = require('twilio');
 var _ = require('underscore');
-
+var rp = require('request-promise');
 var LeadSource = require('../models/LeadSource');
 var Lead = require('../models/Lead');
 var config = require('../config');
@@ -76,16 +76,25 @@ exports.addRecording = function(request, response) {
     console.log(foundLead);
     return foundLead.save();
   }).catch(function(error) {
-    return response.status(500).send('Could not save the lead source');
+    return response.status(500).send('Could not save recording');
   });
 };
 
+//Use of Voicebase Add On
 exports.voicetranscribe = function(request, response) {
-  Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
-    console.log(foundLead);
-    return foundLead.save();
-  }).catch(function(error) {
-    return response.status(500).send('Could not save the lead source');
+  var data = JSON.parse(request.body.AddOns);
+  var vbUrl= data.results.voicebase_transcription.payload[0].url; //returns https
+  var newUrl= 'http'+vbUrl.substring(5); //Doesn't accept https
+  rp(newUrl).then(function (transcriberesults)
+  {
+      Lead.findOne({recordingURL: data.results.voicebase_transcription.links.Recording}).then(function(foundLead) {
+        var transcribeResults = JSON.parse(transcriberesults);
+        foundLead.transcribeText = transcribeResults.media.transcripts.text;
+        return foundLead.save();
+
+      }).catch(function(error) {
+        return response.status(500).send('Could not save transcribe');
+      });
   });
 };
 
