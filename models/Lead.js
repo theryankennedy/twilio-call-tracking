@@ -43,6 +43,10 @@ var LeadSchema = new mongoose.Schema({
   },
   createdOn: {
     type: Date,
+    required: false,
+  },
+  transcribeText: {
+    type: String,
     required: false
   }
 });
