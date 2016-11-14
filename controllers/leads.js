@@ -4,13 +4,16 @@ var rp = require('request-promise');
 var LeadSource = require('../models/LeadSource');
 var Lead = require('../models/Lead');
 var config = require('../config');
+//var LookupsClient = require('twilio').LookupsClient;
+//var client = new LookupsClient(config.accountSid, config.authToken);
+
 
 exports.create = function(request, response) {
   var leadSourceNumber = request.body.To;
 
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
-
+  //var client = LookupsClient(config.accountSid, config.authToken);
 
  // console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
  console.log(request.body);
@@ -19,6 +22,7 @@ exports.create = function(request, response) {
     number: leadSourceNumber
   }).then(function(foundLeadSource) {
 
+    var forwardingNumber = foundLeadSource.forwardingNumber;
     // TODO: CALL ROUTING
 
     // known users go to pros
@@ -31,13 +35,35 @@ exports.create = function(request, response) {
 
     // client
 
-    // dial the number
+    // check if caller is spam
     var twiml = new twilio.TwimlResponse();
     if (spamResults.result.result.recommendation == 'PASS') {
+      //Lookup additional callerID info
+      //console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
+      
+      /*LookupsClient.phoneNumbers(request.body.From).get({
+        type: 'carrier'
+      }, function(error, number) {
+        console.log(number.carrier.type);
+        console.log(number.carrier.name);
+      });
+
+      client.lookups.v1
+  .phoneNumbers('+19252864226')
+  .fetch()
+  .then((number) => console.log(number.carrier.type, number.carrier.name));
+*/
+      Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
+        forwardingNumber = foundLead.ProNumber;
+        console.log(foundLead);
+      }).catch(function(error) {
+        console.log('New lead!');
+      });
+  
       twiml.dial({
             record:'record-from-answer',
             recordingStatusCallback: config.baseUrl + '/recordings'
-        }, foundLeadSource.forwardingNumber);
+        }, forwardingNumber);
     } else {
       twiml.hangup();
     }
@@ -51,6 +77,7 @@ exports.create = function(request, response) {
       callerNumber: request.body.From,
       callSid: request.body.CallSid,
       leadSource: foundLeadSource._id,
+      proNumber: forwardingNumber,
       city: request.body.FromCity,
       state: request.body.FromState,
       callerName: request.body.CallerName,
