@@ -45,11 +45,12 @@ module.exports.token = function(request, response) {
   })
 }
 
+// not in use
 module.exports.createSyncService = (req, res) => {
 
-  let serviceName = 'ContactCenterSyncServiceInstance';
+  let serviceName = 'MySyncServiceInstance';
   let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services`
-  let data = { FriendlyName : 'ContactCenterSyncServiceInstance' }
+  let data = { FriendlyName : serviceName }
   request({ url: url, method: 'POST', formData: data})
   .then(response => {
     res.send(response)
@@ -60,27 +61,69 @@ module.exports.createSyncService = (req, res) => {
 
 }
 
-module.exports.createSyncDocs = (req, res) => {
+module.exports.createSyncMap = (req, res) => {
 
-  // create the docs
-  let docName = 'WorkspaceStats';
-  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncSerivceSid}/Documents`
-  let data = { UniqueName : 'WorkspaceStats', Data : '{}' }
+  // create the map
+  let mapName = 'charts';
+  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Maps`;
+  let data = { UniqueName : 'Charts' };
 
   request({ url: url, method: 'POST', formData: data})
   .then(response => {
-
-    docName = 'PhoneTaskQueueStats';
-    url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncSerivceSid}/Documents`
-    data = { UniqueName : 'PhoneTaskQueueStats', Data : '{}' }
-    return request({ url: url, method: 'POST', formData: data})
-
-  })
-  .then(response => {
-    res.send(response)
+    res.send(response);
   })
   .catch(err => {
     res.status(err.statusCode).send(err.message)
+  });
+}
+
+module.exports.createSyncDoc = (req, res) => {
+
+  // create the map
+  let name = 'leadsByLeadSource';
+  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents`;
+  let data = { UniqueName : 'leadsByLeadSource' };
+
+  request({ url: url, method: 'POST', form: data})
+  .then(response => {
+    res.send(response);
   })
+  .catch(err => {
+    res.status(err.statusCode).send(err.message)
+  });
+
+}
+
+module.exports.updateCharts = (chartData) => {
+
+  let name = 'leadsByLeadSource';
+  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents/${name}`
+
+  let data = { Data: JSON.stringify(chartData)};
+  console.log(JSON.stringify(chartData));
+
+  return request({
+    url: url,
+    method: 'POST',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    form: data
+  })
+  .catch(err => {console.log(err.message);});
+
+}
+
+module.exports.getSyncData = (req, res) => {
+
+  let mapName = 'MP547c2d085eea43f6ba00306b62cfdebb';
+  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Maps/${mapName}/Items`
+
+  request({ url: url, method: 'GET'})
+  .then(response => {
+    res.send(response);
+  })
+  .catch(err => {
+    console.log(err.message);
+    res.sendStatus(err.statusCode).send(err.message);
+  });
 
 }

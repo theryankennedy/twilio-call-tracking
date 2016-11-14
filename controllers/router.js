@@ -20,6 +20,11 @@ exports.webRoutes = function(router) {
   router.get('/leads', leads.show);
   router.post('/voicetranscribe', leads.voicetranscribe);
   router.get('/synctoken', sync.token);
+  router.get('/createsyncdoc', sync.createSyncDoc);
+
+  router.get('/leadsByLeadSourceChartData', leads.getLeadsByLeadSourceChartData);
+  router.get('/updateCharts', leads.updateCharts);
+  router.get('/getSyncData', sync.getSyncData);
 
 };
 

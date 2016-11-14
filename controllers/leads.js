@@ -4,6 +4,7 @@ var rp = require('request-promise');
 var LeadSource = require('../models/LeadSource');
 var Lead = require('../models/Lead');
 var config = require('../config');
+var sync = require('./sync');
 
 exports.create = function(request, response) {
   var leadSourceNumber = request.body.To;
@@ -63,6 +64,8 @@ exports.create = function(request, response) {
 
     return newLead.save();
 
+  }).then(newLead => {
+    return sync.updateCharts();
   }).catch(function(err) {
     console.log('Failed to forward call:');
     console.log(err);
@@ -109,6 +112,57 @@ exports.leadsByLeadSource = function(request, response) {
       response.send(statsByLeadSource);
     });
 };
+
+exports.leadsByLeadSourceChartData = function() {
+   return new Promise(function(resolve, reject) {
+
+    Lead.find()
+    .populate('leadSource')
+    .then(function(existingLeads) {
+      return _.countBy(existingLeads, function(lead) {
+          return lead.leadSource.description;
+      })
+    })
+    .then((statsByLeadSource) => {
+      results = _.map(_.zip(_.keys(statsByLeadSource), _.values(statsByLeadSource)), function(value) {
+        return {
+          description: value[0],
+          lead_count: value[1]
+        };
+      });
+      summaryByLeadSourceData = _.map(results, function(leadSourceDataPoint) {
+        return {
+          value: leadSourceDataPoint.lead_count,
+          color: 'hsl(' + (180 * leadSourceDataPoint.lead_count/ results.length)
+            + ', 100%, 50%)',
+          label: leadSourceDataPoint.description
+        };
+      });
+      resolve(summaryByLeadSourceData);
+    })
+  });
+}
+
+exports.getLeadsByLeadSourceChartData = function(request, response) {
+  exports.leadsByLeadSourceChartData()
+  .then(data => {
+    response.send(data);
+  })
+}
+
+exports.updateCharts = function(req, res) {
+  //console.log('time to update charts');
+  exports.leadsByLeadSourceChartData()
+  .then(data => {
+    //console.log('got here with ' + data);
+    return sync.updateCharts(data);
+  })
+  .then(data => {
+    res.send(data);
+  });
+
+}
+
 
 exports.leadsByCity = function(request, response) {
   Lead.find().then(function(existingLeads) {
