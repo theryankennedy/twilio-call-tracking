@@ -6,7 +6,7 @@ block content
     .col-lg-4
       h3 Add a new number
       p.
-        Create a new lead source by purchasing a new phone number. 
+        Create a new lead source by purchasing a new phone number.
         Area code is optional
 
       form(name='searchNumbers', action='/available-numbers', method='GET')
@@ -44,11 +44,12 @@ block content
     .col-lg-4
       h3 Calls by city
       p.
-        The number of incoming calls from different cities, based on Twilio call 
+        The number of incoming calls from different cities, based on Twilio call
         data
       canvas#pie-by-city
 
 block scripts
   script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js')
-  script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js')
+  script(src='//media.twiliocdn.com/sdk/js/sync/v0.3/twilio-sync.js')
   script(src='js/pieCharts.js')

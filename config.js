@@ -20,6 +20,7 @@ cfg.secret = process.env.APP_SECRET || 'keyboard cat';
 // you could hard code these values here as strings.
 cfg.accountSid = process.env.TWILIO_ACCOUNT_SID;
 cfg.authToken = process.env.TWILIO_AUTH_TOKEN;
+cfg.clientSid = process.env.TWILIO_CLIENT_APP_SID;
 
 // Read in a TwiML app SID from the system environment, or create one to use
 // in this application
@@ -30,11 +31,17 @@ twimlApp.getTwimlAppSid('Call tracking app').then(function(appSid) {
   cfg.appSid = process.env.TWILIO_APP_SID;
 });
 
+
 // MongoDB connection string - MONGO_URL is for local dev,
 // MONGOLAB_URI is for the MongoLab add-on for Heroku deployment
 cfg.mongoUrl = process.env.MONGOLAB_URI || process.env.MONGO_URL;
 
 cfg.baseUrl = process.env.BASE_URL;
+
+// sync
+cfg.syncServiceSid = process.env.TWILIO_SYNC_SERVICE_SID;
+cfg.syncApiKey = process.env.TWILIO_API_KEY;
+cfg.syncApiSecret = process.env.TWILIO_API_SECRET;
 
 // Ensure all required configuration is set
 var configured = [
@@ -47,8 +54,23 @@ var configured = [
   }
 });
 
+var syncConfigured = [
+  cfg.syncServiceSid,
+  cfg.syncApiKey,
+  cfg.syncApiSecret
+].every(function(configValue) {
+  if (configValue) {
+    return true;
+  }
+});
+
 if (!configured) {
   var s = 'TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and MONGO_URL must be set';
+  throw new Error(s);
+}
+
+if (!syncConfigured) {
+  var s = 'TWILIO_SYNC_SERVICE_SID, TWILIO_API_KEY, and TWILIO_API_SECRET must be set for sync';
   throw new Error(s);
 }
 

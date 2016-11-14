@@ -1,9 +1,22 @@
 # Call tracking with Twilio, Node.js, and Express
 
+## AddOns
+marchex_cleancall, voicebase_transcription (need to add webhook url in console)
 
-[![Build Status](https://travis-ci.org/TwilioDevEd/call-tracking-node.svg?branch=master)](https://travis-ci.org/TwilioDevEd/call-tracking-node)
+## Sync setup
+Create an Api Key and Secret in the console (https://www.twilio.com/console/voice/dev-tools/api-keys).  Use them for these in the .env file:
+TWILIO_API_KEY
+TWILIO_API_SECRET
 
-This application demostrates how to use Twilio track calls and measure
+Use this to generate a Sync service.  The result of this command will have a sid that
+will be the TWILIO_SYNC_SERVICE_SID
+```bash
+curl -X POST https://preview.twilio.com/Sync/Services \
+ -d 'FriendlyName=CallTrackingSyncService' \
+ -u '$TWILIO_API_KEY:$TWILIO_API_SECRET'
+ ```
+
+This application demonstrates how to use Twilio track calls and measure
 the effectiveness of marketing campaigns.  A tutorial walkthrough exists [here](https://www.twilio.com/docs/tutorials/walkthrough/call-tracking/node/express) to help with setting this up.
 
 ## Running the Project on Your Machine

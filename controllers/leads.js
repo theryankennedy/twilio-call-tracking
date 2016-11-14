@@ -4,6 +4,8 @@ var rp = require('request-promise');
 var LeadSource = require('../models/LeadSource');
 var Lead = require('../models/Lead');
 var config = require('../config');
+var sync = require('./sync');
+var charts = require('./charts');
 //var LookupsClient = require('twilio').LookupsClient;
 //var client = new LookupsClient(config.accountSid, config.authToken);
 
@@ -14,6 +16,7 @@ exports.create = function(request, response) {
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
   //var client = LookupsClient(config.accountSid, config.authToken);
+
 
  // console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
  console.log(request.body);
@@ -90,6 +93,9 @@ exports.create = function(request, response) {
 
     return newLead.save();
 
+  }).then(newLead => {
+    // send summary results for charts to Sync
+    charts.updateAllCharts();
   }).catch(function(err) {
     console.log('Failed to forward call:');
     console.log(err);
@@ -122,25 +128,6 @@ exports.voicetranscribe = function(request, response) {
       }).catch(function(error) {
         return response.status(500).send('Could not save transcribe');
       });
-  });
-};
-
-exports.leadsByLeadSource = function(request, response) {
-  Lead.find()
-    .populate('leadSource')
-    .then(function(existingLeads) {
-      var statsByLeadSource = _.countBy(existingLeads, function(lead) {
-          return lead.leadSource.description;
-      });
-
-      response.send(statsByLeadSource);
-    });
-};
-
-exports.leadsByCity = function(request, response) {
-  Lead.find().then(function(existingLeads) {
-    var statsByCity = _.countBy(existingLeads, 'city');
-    response.send(statsByCity);
   });
 };
 
