@@ -20,6 +20,7 @@ cfg.secret = process.env.APP_SECRET || 'keyboard cat';
 // you could hard code these values here as strings.
 cfg.accountSid = process.env.TWILIO_ACCOUNT_SID;
 cfg.authToken = process.env.TWILIO_AUTH_TOKEN;
+cfg.clientSid = process.env.TWILIO_CLIENT_APP_SID;
 
 // Read in a TwiML app SID from the system environment, or create one to use
 // in this application
@@ -29,6 +30,7 @@ twimlApp.getTwimlAppSid('Call tracking app').then(function(appSid) {
   process.env.TWILIO_APP_SID = appSid;
   cfg.appSid = process.env.TWILIO_APP_SID;
 });
+
 
 // MongoDB connection string - MONGO_URL is for local dev,
 // MONGOLAB_URI is for the MongoLab add-on for Heroku deployment

@@ -1,0 +1,32 @@
+extends layout
+block content
+	.row
+		.col-xs-12
+			h2 Call Tracking Concierge
+		.col-xs-12
+			.form-group
+				input.form-control#number(type='text', name='number', placeholder='Enter a phone number to call')
+				button#callbutton Call
+				button#disconnectbutton Disconnect Call
+
+block scripts
+	script(type='text/javascript', src='//static.twilio.com/libs/twiliojs/1.2/twilio.min.js')
+	script(type='text/javascript').
+	Twilio.Device.setup('<%= token %>', {"debug":true});
+   	Twilio.Device.ready(function(device) {
+    console.log("Twilio.Device is now ready for connections");
+    $( "#callbutton" ).click(function() {
+    var params = {"tocall": $("#number").val()};
+    Twilio.Device.connect(params);
+    });
+    $( "#disconnectbutton" ).click(function() {
+    Twilio.Device.disconnectAll();
+    });
+    Twilio.Device.incoming(function (connection) {
+    if (confirm('Accept incoming call from ' + connection.parameters.From + '?')){
+    connection.accept();
+    }
+    else {
+    connection.reject();
+    	}
+    	});

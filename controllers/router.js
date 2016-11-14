@@ -2,6 +2,9 @@ var availableNumbers = require('./availableNumbers');
 var leadSources = require('./leadSources');
 var leads = require('./leads');
 var dashboard = require('./dashboard');
+var ivr = require('./ivrmenu');
+var concierge = require('./concierge');
+
 
 // Map routes to controller functions
 exports.webRoutes = function(router) {
@@ -18,7 +21,13 @@ exports.webRoutes = function(router) {
   router.get('/leadsdata', leads.getLeads);
   router.get('/leads', leads.show);
   router.post('/voicetranscribe', leads.voicetranscribe);
-  
+  router.post('/ivrmenu',ivr.ivrmenu) ;
+  router.post('/gathers',ivr.gathers) ;
+  router.post('/incall',concierge.incall) ;
+  router.get('/token',concierge.token) ;
+  router.get('/makecall',concierge.makecall) ;
+  router.get('/concierge', concierge.show);
+
 
 };
 
