@@ -80,31 +80,33 @@ module.exports.createSyncMap = (req, res) => {
 module.exports.createSyncDoc = (req, res) => {
 
   // create the map
-  let name = 'leadsByLeadSource';
-  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents`;
-  let data = { UniqueName : 'leadsByLeadSource' };
+  let name = req.query.name;
+  if (!name) {
+    res.send(400);
+  } else {
 
-  request({ url: url, method: 'POST', form: data})
-  .then(response => {
-    res.send(response);
-  })
-  .catch(err => {
-    res.status(err.statusCode).send(err.message)
-  });
+    let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents`;
+    let data = { UniqueName : name };
+
+    request({ url: url, method: 'POST', form: data})
+    .then(response => {
+      res.send(response);
+    })
+    .catch(err => {
+      res.status(err.statusCode).send(err.message)
+    });
+
+  }
 
 }
 
-module.exports.updateCharts = (chartData) => {
+module.exports.updateChartDoc = (chartName, chartData) => {
 
-  let name = 'leadsByLeadSource';
-  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents/${name}`
-
-  let data = { Data: JSON.stringify(chartData)};
-  console.log(JSON.stringify(chartData));
+  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents/${chartName}`
+  let data = { Data: JSON.stringify({dataArray: chartData})};
 
   return request({
-    url: url,
-    method: 'POST',
+    url: url, method: 'POST',
     headers: {'content-type': 'application/x-www-form-urlencoded'},
     form: data
   })
@@ -112,10 +114,15 @@ module.exports.updateCharts = (chartData) => {
 
 }
 
-module.exports.getSyncData = (req, res) => {
+module.exports.getSyncDoc = (req, res) => {
 
-  let mapName = 'MP547c2d085eea43f6ba00306b62cfdebb';
-  let url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Maps/${mapName}/Items`
+  let url = '';
+  let docName = req.query.name;
+  if (!docName) {
+    url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents`;
+  } else {
+    url = `https://${apiKey}:${apiSecret}@preview.twilio.com/Sync/Services/${syncServiceSid}/Documents/${docName}`;
+  }
 
   request({ url: url, method: 'GET'})
   .then(response => {

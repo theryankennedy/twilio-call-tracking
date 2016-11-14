@@ -3,6 +3,8 @@ var leadSources = require('./leadSources');
 var leads = require('./leads');
 var dashboard = require('./dashboard');
 var sync = require('./sync');
+var charts = require('./charts');
+
 
 // Map routes to controller functions
 exports.webRoutes = function(router) {
@@ -14,17 +16,18 @@ exports.webRoutes = function(router) {
   router.get('/lead-source/:id/edit', leadSources.edit);
   router.post('/lead-source/:id/update', leadSources.update);
   router.get('/dashboard', dashboard.show);
-  router.get('/lead/summary-by-lead-source', leads.leadsByLeadSource);
-  router.get('/lead/summary-by-city', leads.leadsByCity);
+  router.get('/lead/summary-by-lead-source', charts.leadsByLeadSource);
+  router.get('/lead/summary-by-city', charts.leadsByCity);
   router.get('/leadsdata', leads.getLeads);
   router.get('/leads', leads.show);
   router.post('/voicetranscribe', leads.voicetranscribe);
   router.get('/synctoken', sync.token);
   router.get('/createsyncdoc', sync.createSyncDoc);
 
-  router.get('/leadsByLeadSourceChartData', leads.getLeadsByLeadSourceChartData);
-  router.get('/updateCharts', leads.updateCharts);
-  router.get('/getSyncData', sync.getSyncData);
+  router.get('/leadsByLeadSourceChartData', charts.getLeadsByLeadSourceChartData);
+  router.get('/leadsByCityChartData', charts.getLeadsByCityChartData)
+  router.get('/updateCharts', charts.updateCharts);
+  router.get('/syncdoc', sync.getSyncDoc);
 
 };
 
