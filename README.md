@@ -16,6 +16,8 @@ curl -X POST https://preview.twilio.com/Sync/Services \
  -u '$TWILIO_API_KEY:$TWILIO_API_SECRET'
  ```
 
+also for sync you need to npm install in the twilio-node directory
+
 This application demonstrates how to use Twilio track calls and measure
 the effectiveness of marketing campaigns.  A tutorial walkthrough exists [here](https://www.twilio.com/docs/tutorials/walkthrough/call-tracking/node/express) to help with setting this up.
 
