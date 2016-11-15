@@ -16,7 +16,11 @@ exports.create = function(request, response) {
   var twiml = new twilio.TwimlResponse();
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
+  var nextCallerResults = addOnResults.results['nextcaller_advanced_caller_id'];
   //var client = LookupsClient(config.accountSid, config.authToken);
+
+  console.log('caller ID Info: ');
+  
 
   //Create new Lead
   var newLead = new Lead({
@@ -31,7 +35,9 @@ exports.create = function(request, response) {
     blacklistedReason: spamResults.result.result.reason,
     recordingURL: '',
     callDuration: '',
-    createdOn: new Date()
+    createdOn: new Date(),
+    gender: nextCallerResults.result.records[0].gender,
+    age: parseInt(nextCallerResults.result.records[0].age, 10)
   });
 
   LeadSource.findOne({
@@ -41,21 +47,6 @@ exports.create = function(request, response) {
       forwardingNumber = foundLeadSource.forwardingNumber;
       newLead.leadSource = foundLeadSource._id;
       
-          //Lookup additional callerID info
-          //console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
-          
-          /*LookupsClient.phoneNumbers(request.body.From).get({
-            type: 'carrier'
-          }, function(error, number) {
-            console.log(number.carrier.type);
-            console.log(number.carrier.name);
-          });
-
-          client.lookups.v1
-      .phoneNumbers('+19252864226')
-      .fetch()
-      .then((number) => console.log(number.carrier.type, number.carrier.name));
-    */
       Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
         if (foundLead != null && foundLead.ProNumber != '') {
           forwardingNumber = foundLead.ProNumber;

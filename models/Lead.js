@@ -60,6 +60,10 @@ var LeadSchema = new mongoose.Schema({
   gender: {
     type: String,
     required: false
+  },
+  age: {
+    type: Number,
+    required: false
   }
 });
 
