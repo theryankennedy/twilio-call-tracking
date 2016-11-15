@@ -15,7 +15,7 @@ exports.ivrmenu = function (request, response) {
   twiml.say({voice:'woman'}, 'Welcome to LeadMetrix!');
   twiml.gather({ 
     numDigits: 1,
-    action: '/gather'
+    action: '/gathers'
   }, (gatherNode) => {
     gatherNode.say('If you wish to speak to a professional, press 1. If you wish to speak to support, press 2. Else Press 3 to talk to concierge');
   });

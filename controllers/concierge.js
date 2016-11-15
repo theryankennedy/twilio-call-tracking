@@ -15,7 +15,7 @@ exports.incall = function(request, response) {
 	  twiml.dial(function(dialNode) {
     	dialNode.client('t_1');
     	});
-    response.set('Content-Type', 'text/xml');
+   // response.set('Content-Type', 'text/xml');
   	response.send(twiml.toString());
 };
 
@@ -28,15 +28,19 @@ exports.token = function(request, response) {
         config.accountSid,
         config.authToken
     );
-	
+
+		console.log(config.clientSid);
+
 	// Give the capability generator permission to make outbound calls
 	    capability.allowClientOutgoing(config.clientSid);
 	    capability.allowClientIncoming('t_1');
 
     // Render an HTML page which contains our capability token
-	   response.render('concierge.jade', {
-	    token:capability.generate()
-	   });
+	   // response.render('concierge.jade', {
+	   //  token:capability.generate()
+	   // });
+
+	   response.send({ token: capability.generate() });
 
 	};
 
@@ -47,11 +51,11 @@ exports.token = function(request, response) {
  //call from client to pstn
  exports.makecall = function(request, response) {
  //app.get ('/makecall',function(req,res){
-		var tocall = req.param('tocall'); // custom parameter from Twilio.Device.connect 
+		var tocall = req.param('tocall'); // custom parameter from Twilio.Device.connect
 		var twiml = new twilio.TwimlResponse();
 		twiml.dial(
 		    tocall,
-		    { callerId:'+13038080244'}       
+		    { callerId:'+13038080244'}
 		 );
     response.send (twiml.toString());
 };
