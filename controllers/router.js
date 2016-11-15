@@ -6,7 +6,7 @@ var ivr = require('./ivrmenu');
 var concierge = require('./concierge');
 var sync = require('./sync');
 var charts = require('./charts');
-
+var ads = require('./ads');
 
 // Map routes to controller functions
 exports.webRoutes = function(router) {
@@ -37,6 +37,7 @@ exports.webRoutes = function(router) {
   router.get('/updateCharts', charts.updateCharts);
   router.get('/syncdoc', sync.getSyncDoc);
   router.get('/leadsources', leadSources.show);
+  router.get('/ad', ads.show);
 
 };
 

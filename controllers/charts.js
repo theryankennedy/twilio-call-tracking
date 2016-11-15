@@ -205,7 +205,7 @@ exports.leadsByStateChartData = function() {
            value: stateDataPoint.lead_count,
            color: 'hsl(' + (180 * stateDataPoint.lead_count/ results.length)
              + ', 100%, 50%)',
-           label: stateDataPoint.city || 'unknown'
+           label: stateDataPoint.state || 'unknown'
          };
        });
 
