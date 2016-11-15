@@ -32,7 +32,7 @@ exports.gathers = function(request, response) {
     switch (request.body.Digits) {
       //decide on the numbers to dial in 
       case '1': twiml.dial('+13038080244'); break;
-      case '2': twiml.dial('+13474297453'); break; 
+      case '2': twiml.dial('+13474297453'); break; //concierge
       //case '3': twiml.dial('+13038080244'); break;
       default: 
         twiml.say('Sorry, I don\'t understand that choice.').pause();
