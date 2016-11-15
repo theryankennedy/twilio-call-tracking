@@ -39,6 +39,8 @@ exports.webRoutes = function(router) {
   router.get('/leadsources', leadSources.show);
   router.get('/ad', ads.show);
   router.get('/getnumber', ads.getNumber);
+  router.get('/addnumber', ads.addNumber);
+  router.get('/getnumbers', ads.getNumbers)
 
 };
 

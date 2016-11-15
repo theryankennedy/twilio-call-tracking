@@ -12,7 +12,7 @@ var charts = require('./charts');
 
 exports.create = function(request, response) {
   var leadSourceNumber = request.body.To;
-  var forwardingNumber = '+14089164333';
+  var forwardingNumber = config.ivrNumber; //'+14089164333'
   var twiml = new twilio.TwimlResponse();
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
@@ -20,7 +20,7 @@ exports.create = function(request, response) {
   //var client = LookupsClient(config.accountSid, config.authToken);
 
   console.log('caller ID Info: ');
-  
+
 
   //Create new Lead
   var newLead = new Lead({
@@ -46,7 +46,7 @@ exports.create = function(request, response) {
     if (foundLeadSource != null) {
       forwardingNumber = foundLeadSource.forwardingNumber;
       newLead.leadSource = foundLeadSource._id;
-      
+
       Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
         if (foundLead != null && foundLead.ProNumber != '') {
           forwardingNumber = foundLead.ProNumber;
@@ -59,7 +59,7 @@ exports.create = function(request, response) {
       });
 
       newLead.ProNumber = forwardingNumber;
-  
+
       if (spamResults.result.result.recommendation == 'PASS') {
         twiml.dial({
               record:'record-from-answer',
@@ -70,7 +70,7 @@ exports.create = function(request, response) {
       }
       response.send(twiml.toString());
 
-    } 
+    }
     else {
       //no leadsource found
       Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
@@ -99,9 +99,9 @@ exports.create = function(request, response) {
   }).catch(function(err) {
     console.log('Failed to forward call:');
     console.log(err);
-        
+
   });
-  
+
   console.log(newLead);
   return newLead.save();
 };

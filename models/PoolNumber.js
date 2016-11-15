@@ -12,6 +12,10 @@ var PoolNumberSchema = new mongoose.Schema({
   status: {
     type: String,
     required: false
+  },
+  dateUsed: {
+    type: Date,
+    require: false
   }
 });
 

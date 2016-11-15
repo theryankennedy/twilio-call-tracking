@@ -37,6 +37,7 @@ twimlApp.getTwimlAppSid('Call tracking app').then(function(appSid) {
 cfg.mongoUrl = process.env.MONGOLAB_URI || process.env.MONGO_URL;
 
 cfg.baseUrl = process.env.BASE_URL;
+cfg.ivrNumber = process.env.IVR_NUMBER;
 
 // sync
 cfg.syncServiceSid = process.env.TWILIO_SYNC_SERVICE_SID;
