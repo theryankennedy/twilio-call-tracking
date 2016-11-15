@@ -4,10 +4,13 @@ var rp = require('request-promise');
 var LeadSource = require('../models/LeadSource');
 var Lead = require('../models/Lead');
 var config = require('../config');
-var sync = require('./sync');
-var charts = require('./charts');
+<<<<<<< HEAD
 //var LookupsClient = require('twilio').LookupsClient;
 //var client = new LookupsClient(config.accountSid, config.authToken);
+=======
+var sync = require('./sync');
+var charts = require('./charts');
+>>>>>>> 9f15a9c8eff872955b1e156fef64696ff40d2123
 
 
 exports.create = function(request, response) {
@@ -16,7 +19,6 @@ exports.create = function(request, response) {
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
   //var client = LookupsClient(config.accountSid, config.authToken);
-
 
  // console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
  console.log(request.body);
@@ -103,7 +105,6 @@ exports.create = function(request, response) {
 };
 
 exports.addRecording = function(request, response) {
-  //console.log(request);
   Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
     foundLead.recordingURL = request.body.RecordingUrl;
     foundLead.callDuration = request.body.CallDuration;
