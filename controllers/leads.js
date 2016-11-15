@@ -103,8 +103,8 @@ exports.create = function(request, response) {
 };
 
 exports.addRecording = function(request, response) {
-  //console.log(request);
-  Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
+  console.dir(request.body);
+  Lead.findOne({callSid: request.body.CallSid}).then(function(foundLead) {
     foundLead.recordingURL = request.body.RecordingUrl;
     foundLead.callDuration = request.body.CallDuration;
     console.log(foundLead);
