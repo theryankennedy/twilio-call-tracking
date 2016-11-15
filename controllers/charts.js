@@ -5,6 +5,7 @@ var LeadSource = require('../models/LeadSource');
 var Lead = require('../models/Lead');
 var config = require('../config');
 var sync = require('./sync');
+//var pattern = require('patternomaly');
 
 
 // -----------------------
@@ -92,15 +93,21 @@ exports.leadsByLeadSource = function(request, response) {
 };
 exports.leadsByLeadSourceChartData = function() {
    return new Promise(function(resolve, reject) {
-
+     console.log('about to Lead.find');
     Lead.find()
     .populate('leadSource')
     .then(function(existingLeads) {
+      console.log('got the leads');
       return _.countBy(existingLeads, function(lead) {
-          return lead.leadSource.description;
+          if (!lead.leadSource) {
+            return 'butter';
+          } else {
+            return lead.leadSource.description
+          }
       })
     })
     .then((statsByLeadSource) => {
+      console.log('got some lead stats');
       var results = _.map(_.zip(_.keys(statsByLeadSource), _.values(statsByLeadSource)), function(value) {
         return {
           description: value[0],
@@ -125,6 +132,12 @@ exports.leadsByLeadSourceChartData = function() {
       };
       resolve(data);
     })
+    .catch(function(failure) {
+      console.log('Failed getting the data');
+      console.log('Error was:');
+      console.log(failure);
+      reject(failure);
+    });
   });
 }
 exports.getLeadsByLeadSourceChartData = function(request, response) {
