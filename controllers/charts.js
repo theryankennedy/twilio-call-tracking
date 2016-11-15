@@ -12,6 +12,8 @@ var sync = require('./sync');
 // CHARTS and summary data
 exports.updateAllCharts = function() {
 
+  console.log('updating charts');
+
   let chartNames = [
     'leadsByLeadSource',
     'leadsByCity',

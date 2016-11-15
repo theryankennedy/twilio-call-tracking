@@ -11,6 +11,7 @@ $.getJSON('/synctoken', function(results) {
   // listen for updates
   client.document("leadsByLeadSource").then(function (doc) {
     doc.on("updated",function(updatedResults) {
+      console.log('updating');
       updateChartUI(updatedResults, 'pie-by-lead-source');
     });
   });
