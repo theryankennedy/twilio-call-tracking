@@ -40,7 +40,7 @@ exports.token = function(request, response) {
 	   //  token:capability.generate()
 	   // });
 
-	   response.send({ token: capability.generate() });
+	   response.send({ token: capability.generate()});
 
 	};
 
@@ -51,8 +51,9 @@ exports.token = function(request, response) {
  //call from client to pstn
  exports.makecall = function(request, response) {
  //app.get ('/makecall',function(req,res){
-		var tocall = req.param('tocall'); // custom parameter from Twilio.Device.connect
+		var tocall = request.param('tocall'); // custom parameter from Twilio.Device.connect
 		var twiml = new twilio.TwimlResponse();
+		console.log(tocall);
 		twiml.dial(
 		    tocall,
 		    { callerId:'+13038080244'}

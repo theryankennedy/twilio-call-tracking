@@ -17,7 +17,7 @@ exports.ivrmenu = function (request, response) {
     numDigits: 1,
     action: '/gathers'
   }, (gatherNode) => {
-    gatherNode.say('If you wish to speak to a professional, press 1. If you wish to speak to support, press 2. Else Press 3 to talk to concierge');
+    gatherNode.say('If you wish to speak to a professional, press 1. If you wish to speak to concierge, press 2');
   });
 
   twiml.redirect('/ivrmenu');
@@ -32,8 +32,8 @@ exports.gathers = function(request, response) {
     switch (request.body.Digits) {
       //decide on the numbers to dial in 
       case '1': twiml.dial('+13038080244'); break;
-      case '2': twiml.dial('+13038080244'); break;
-      case '3': twiml.dial('+13038080244'); break;
+      case '2': twiml.dial('+13474297453'); break; 
+      //case '3': twiml.dial('+13038080244'); break;
       default: 
         twiml.say('Sorry, I don\'t understand that choice.').pause();
         twiml.redirect('/ivrmenu');
