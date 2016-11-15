@@ -7,10 +7,14 @@ block content
 		.col-xs-4
 			.form-group
 				input.form-control#number(type='text', name='number', placeholder='Enter a phone number to call')
-				br
-				br
-				button#callbutton Call
-				button#disconnectbutton Disconnect Call
+			.form-group
+				button.btn.btn-success#callbutton
+					span.glyphicon.glyphicon-earphone
+					| &nbsp; Call
+				&nbsp;&nbsp;&nbsp;
+				button.btn.btn-danger#disconnectbutton
+					span.glyphicon.glyphicon-phone-alt
+					| &nbsp; End
 
 block scripts
 	script(type='text/javascript', src='//static.twilio.com/libs/twiliojs/1.2/twilio.min.js')
