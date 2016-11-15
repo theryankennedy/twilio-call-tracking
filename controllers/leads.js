@@ -19,7 +19,7 @@ exports.create = function(request, response) {
   var nextCallerResults = addOnResults.results['nextcaller_advanced_caller_id'];
   //var client = LookupsClient(config.accountSid, config.authToken);
 
-  console.log('caller ID Info: ');
+  //console.log('caller ID Info: ');
 
 
   //Create new Lead
@@ -35,11 +35,14 @@ exports.create = function(request, response) {
     blacklistedReason: spamResults.result.result.reason,
     recordingURL: '',
     callDuration: '',
-    createdOn: new Date(),
-    gender: nextCallerResults.result.records[0].gender,
-    age: parseInt(nextCallerResults.result.records[0].age, 10)
+    createdOn: new Date()
   });
-
+  if (nextCallerResults.result.records != null) {
+    newLead.gender = nextCallerResults.result.records[0].gender;
+  }
+  if (nextCallerResults.result.records != null) {
+    newLead.age = parseInt(nextCallerResults.result.records[0].age, 10)
+  }
   LeadSource.findOne({
     number: leadSourceNumber
   }).then(function(foundLeadSource) {
@@ -48,7 +51,7 @@ exports.create = function(request, response) {
       newLead.leadSource = foundLeadSource._id;
 
       Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
-        if (foundLead != null && foundLead.ProNumber != '') {
+        if (foundLead != null && foundLead.ProNumber != null && foundLead.ProNumber != '') {
           forwardingNumber = foundLead.ProNumber;
           console.log('Existing Lead:');
           console.log(foundLead);
@@ -74,25 +77,38 @@ exports.create = function(request, response) {
     else {
       //no leadsource found
       Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
-        if (foundLead != null && foundLead.ProNumber != '') {
+        if (foundLead != null && foundLead.ProNumber != null && foundLead.ProNumber != '') {
           forwardingNumber = foundLead.ProNumber;
+          if (spamResults.result.result.recommendation == 'PASS') {
+            twiml.dial(forwardingNumber);
+          } 
+          else {
+            twiml.hangup();
+          }
           console.log('existing lead!');
           console.log(foundLead);
         }
+        else {
+          if (spamResults.result.result.recommendation == 'PASS') {
+            //console.log('PASSING TO THE IVR!!!!')
+            //twiml.redirect(config.baseUrl + '/ivrmenu');
+            //console.log(twiml.toString());
+            //console.log('After');
+                  console.log('Forwarding Number');
+      console.log(forwardingNumber);
+            twiml.dial(forwardingNumber);
+          }
+          else {
+            twiml.hangup();
+          }
+        }
+        response.send(twiml.toString());
       }).catch(function(error) {
         console.log(error);
         console.log('New lead!');
       });
-
-      if (spamResults.result.result.recommendation == 'PASS') {
-        twiml.dial(forwardingNumber);
-      }
-      else {
-        twiml.hangup();
-      }
-      response.send(twiml.toString());
+      
     }
-
   }).then(newLead => {
     // send summary results for charts to Sync
     charts.updateAllCharts();
@@ -101,7 +117,8 @@ exports.create = function(request, response) {
     console.log(err);
 
   });
-
+  //response.send(twiml.toString());
+  console.log('NEW LEAD');
   console.log(newLead);
   return newLead.save();
 };
