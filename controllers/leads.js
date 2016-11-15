@@ -12,86 +12,95 @@ var charts = require('./charts');
 
 exports.create = function(request, response) {
   var leadSourceNumber = request.body.To;
-
+  var forwardingNumber = '+14089164333';
+  var twiml = new twilio.TwimlResponse();
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
   //var client = LookupsClient(config.accountSid, config.authToken);
 
-
- // console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
- console.log(request.body);
+  //Create new Lead
+  var newLead = new Lead({
+    callerNumber: request.body.From,
+    callSid: request.body.CallSid,
+    leadSource: null,
+    ProNumber: '',
+    city: request.body.FromCity,
+    state: request.body.FromState,
+    callerName: request.body.CallerName,
+    blacklisted: spamResults.result.result.recommendation,
+    blacklistedReason: spamResults.result.result.reason,
+    recordingURL: '',
+    callDuration: '',
+    createdOn: new Date()
+  });
 
   LeadSource.findOne({
     number: leadSourceNumber
   }).then(function(foundLeadSource) {
-
-    var forwardingNumber = foundLeadSource.forwardingNumber;
-    // TODO: CALL ROUTING
-
-    // known users go to pros
-    // - check the db for an existing lead based on the phone number
-
-    // if it's a new number
-    //  - check the description
-    //  - if it's a
-
-
-    // client
-
-    // check if caller is spam
-    var twiml = new twilio.TwimlResponse();
-    if (spamResults.result.result.recommendation == 'PASS') {
-      //Lookup additional callerID info
-      //console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
+    if (foundLeadSource != null) {
+      forwardingNumber = foundLeadSource.forwardingNumber;
+      newLead.leadSource = foundLeadSource._id;
       
-      /*LookupsClient.phoneNumbers(request.body.From).get({
-        type: 'carrier'
-      }, function(error, number) {
-        console.log(number.carrier.type);
-        console.log(number.carrier.name);
+          //Lookup additional callerID info
+          //console.log(JSON.parse(request.body.AddOns).results.whitepages_pro_caller_id.result.results[0]);
+          
+          /*LookupsClient.phoneNumbers(request.body.From).get({
+            type: 'carrier'
+          }, function(error, number) {
+            console.log(number.carrier.type);
+            console.log(number.carrier.name);
+          });
+
+          client.lookups.v1
+      .phoneNumbers('+19252864226')
+      .fetch()
+      .then((number) => console.log(number.carrier.type, number.carrier.name));
+    */
+      Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
+        if (foundLead != null && foundLead.ProNumber != '') {
+          forwardingNumber = foundLead.ProNumber;
+          console.log('Existing Lead:');
+          console.log(foundLead);
+        }
+      }).catch(function(error) {
+        console.log('Error finding Lead');
+        console.log(error);
       });
 
-      client.lookups.v1
-  .phoneNumbers('+19252864226')
-  .fetch()
-  .then((number) => console.log(number.carrier.type, number.carrier.name));
-*/
+      newLead.ProNumber = forwardingNumber;
+  
+      if (spamResults.result.result.recommendation == 'PASS') {
+        twiml.dial({
+              record:'record-from-answer',
+              recordingStatusCallback: config.baseUrl + '/recordings'
+          }, forwardingNumber);
+      } else {
+        twiml.hangup();
+      }
+      response.send(twiml.toString());
+
+    } 
+    else {
+      //no leadsource found
       Lead.findOne({callerNumber: request.body.From}).then(function(foundLead) {
-        forwardingNumber = foundLead.ProNumber;
-        console.log(foundLead);
+        if (foundLead != null && foundLead.ProNumber != '') {
+          forwardingNumber = foundLead.ProNumber;
+          console.log('existing lead!');
+          console.log(foundLead);
+        }
       }).catch(function(error) {
+        console.log(error);
         console.log('New lead!');
       });
-  
-      twiml.dial({
-            record:'record-from-answer',
-            recordingStatusCallback: config.baseUrl + '/recordings'
-        }, forwardingNumber);
-    } else {
-      twiml.hangup();
+
+      if (spamResults.result.result.recommendation == 'PASS') {
+        twiml.dial(forwardingNumber);
+      }
+      else {
+        twiml.hangup();
+      }
+      response.send(twiml.toString());
     }
-    response.send(twiml.toString());
-
-
-    // TODO: SAVE DATA FOR DASHBOARD
-
-    // save to db
-    var newLead = new Lead({
-      callerNumber: request.body.From,
-      callSid: request.body.CallSid,
-      leadSource: foundLeadSource._id,
-      proNumber: forwardingNumber,
-      city: request.body.FromCity,
-      state: request.body.FromState,
-      callerName: request.body.CallerName,
-      blacklisted: spamResults.result.result.recommendation,
-      blacklistedReason: spamResults.result.result.reason,
-      recordingURL: '',
-      callDuration: '',
-      createdOn: new Date()
-    });
-
-    return newLead.save();
 
   }).then(newLead => {
     // send summary results for charts to Sync
@@ -99,7 +108,11 @@ exports.create = function(request, response) {
   }).catch(function(err) {
     console.log('Failed to forward call:');
     console.log(err);
+        
   });
+  
+  console.log(newLead);
+  return newLead.save();
 };
 
 exports.addRecording = function(request, response) {
