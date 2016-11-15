@@ -15,7 +15,7 @@ exports.incall = function(request, response) {
 	  twiml.dial(function(dialNode) {
     	dialNode.client('t_1');
     	});
-    response.set('Content-Type', 'text/xml');
+   // response.set('Content-Type', 'text/xml');
   	response.send(twiml.toString());
 };
 
@@ -34,9 +34,11 @@ exports.token = function(request, response) {
 	    capability.allowClientIncoming('t_1');
 
     // Render an HTML page which contains our capability token
-	   response.render('concierge.jade', {
-	    token:capability.generate()
-	   });
+	   // response.render('concierge.jade', {
+	   //  token:capability.generate()
+	   // });
+
+	   response.send(capability.generate());
 
 	};
 

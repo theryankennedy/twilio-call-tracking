@@ -25,7 +25,7 @@ exports.webRoutes = function(router) {
   router.post('/voicetranscribe', leads.voicetranscribe);
   router.post('/ivrmenu',ivr.ivrmenu) ;
   router.post('/gathers',ivr.gathers) ;
-  router.post('/incall',concierge.incall) ;
+  router.get('/incall',concierge.incall) ;
   router.get('/token',concierge.token) ;
   router.get('/makecall',concierge.makecall) ;
   router.get('/concierge', concierge.show);
