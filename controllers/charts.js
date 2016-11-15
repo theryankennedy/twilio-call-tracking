@@ -13,7 +13,8 @@ exports.updateAllCharts = function() {
 
   let chartNames = [
     'leadsByLeadSource',
-    'leadsByCity'
+    'leadsByCity',
+    'leadsByState'
   ];
 
   let promiseList = chartNames.map(chartName => {
@@ -46,6 +47,15 @@ exports.updateChart = function(name) {
           resolve(data);
         });
         break;
+      case "leadsByState":
+          exports.leadsByStateChartData()
+          .then(data => {
+            return sync.updateChartDoc('leadsByState', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break;
       default:
         resolve(name + ' not found');
     }
@@ -172,4 +182,42 @@ exports.getLeadsByCityChartData = function(request, response) {
   .then(data => {
     response.send(data);
   })
+}
+
+
+exports.leadsByStateChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find()
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, 'state');
+     })
+     .then((results) => {
+
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           state: value[0],
+           lead_count: value[1]
+         };
+       });
+
+       summaryByStateData = _.map(results, function(stateDataPoint) {
+         return {
+           value: stateDataPoint.lead_count,
+           color: 'hsl(' + (180 * stateDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: stateDataPoint.city || 'unknown'
+         };
+       });
+
+       var data = {
+         labels: summaryByStateData.map(item => item.label),
+         datasets: [
+             {
+                 data: summaryByStateData.map(item => item.value),
+                 backgroundColor: summaryByStateData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
 }

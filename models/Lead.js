@@ -13,6 +13,14 @@ var LeadSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'LeadSource'
   },
+  /*pro: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Pro'
+  },*/
+  ProNumber: {
+    type: String,
+    required: false
+  },
   city: {
     type: String, 
     required: false
@@ -46,6 +54,10 @@ var LeadSchema = new mongoose.Schema({
     required: false,
   },
   transcribeText: {
+    type: String,
+    required: false
+  },
+  gender: {
     type: String,
     required: false
   }

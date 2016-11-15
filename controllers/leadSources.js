@@ -62,3 +62,12 @@ exports.update = function(request, response) {
     return response.status(500).send('Could not save the lead source');
   });
 };
+
+exports.show = function(request, response) {
+  LeadSource.find().then(function(leadSources) {
+    return response.render('leadsources', {
+      leadSources: leadSources,
+      appSid: config.appSid
+    });
+  });
+};

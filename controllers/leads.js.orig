@@ -10,6 +10,7 @@ var charts = require('./charts');
 //var client = new LookupsClient(config.accountSid, config.authToken);
 
 
+
 exports.create = function(request, response) {
   var leadSourceNumber = request.body.To;
 
@@ -103,8 +104,13 @@ exports.create = function(request, response) {
 };
 
 exports.addRecording = function(request, response) {
+<<<<<<< HEAD
+  //console.log(request);
+  Lead.findOne({callSid: request.body.ParentCallSid}).then(function(foundLead) {
+=======
   console.dir(request.body);
   Lead.findOne({callSid: request.body.CallSid}).then(function(foundLead) {
+>>>>>>> d93fb65b893de442d9baa4d33cbe084d2effc3ae
     foundLead.recordingURL = request.body.RecordingUrl;
     foundLead.callDuration = request.body.CallDuration;
     console.log(foundLead);

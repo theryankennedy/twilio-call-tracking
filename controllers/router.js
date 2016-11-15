@@ -36,6 +36,7 @@ exports.webRoutes = function(router) {
   router.get('/leadsByCityChartData', charts.getLeadsByCityChartData)
   router.get('/updateCharts', charts.updateCharts);
   router.get('/syncdoc', sync.getSyncDoc);
+  router.get('/leadsources', leadSources.show);
 
 };
 
