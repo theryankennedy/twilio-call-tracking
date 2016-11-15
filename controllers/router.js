@@ -38,6 +38,7 @@ exports.webRoutes = function(router) {
   router.get('/syncdoc', sync.getSyncDoc);
   router.get('/leadsources', leadSources.show);
   router.get('/ad', ads.show);
+  router.get('/getnumber', ads.getNumber);
 
 };
 
