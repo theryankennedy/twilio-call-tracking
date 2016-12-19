@@ -14,7 +14,7 @@ exports.ivrmenu = function (request, response) {
   let twiml = new twilio.TwimlResponse();
 
   twiml.say({voice:'woman'}, 'Welcome to LeadMetrix!');
-  twiml.gather({ 
+  twiml.gather({
     numDigits: 1,
     action: '/gathers'
   }, (gatherNode) => {
@@ -32,15 +32,15 @@ exports.gathers = function(request, response) {
 
   if (request.body.Digits) {
     switch (request.body.Digits) {
-      //decide on the numbers to dial in 
+      //decide on the numbers to dial in
       case '1': twiml.dial({action: config.baseUrl + '/voicemail'}, function() {
-        this.number('+14158002920', {
+        this.number('+19252864226', {
           url: config.baseUrl + '/whisper'
         });
       });
       case '2': twiml.dial('+13474297453'); break; //concierge
       //case '3': twiml.dial('+13038080244'); break;
-      default: 
+      default:
         twiml.say('Sorry, I don\'t understand that choice.').pause();
         twiml.redirect('/ivrmenu');
         break;
@@ -56,7 +56,7 @@ exports.gathers = function(request, response) {
 exports.whisper = function(request, response) {
   let twiml = new twilio.TwimlResponse();
   console.log(request.body);
-  twiml.gather({ 
+  twiml.gather({
     numDigits: 1,
     action: '/connect'
   }, function () {
@@ -103,28 +103,28 @@ exports.voicemail = function(request, response) {
 //app.post('/sendVoicemailSMS', (request, response) => {
 exports.sendVoicemailSMS = function(request, response) {
   let twiml = new twilio.TwimlResponse();
+  console.dir(request.body);
+  //client.calls(request.body.CallSid).get(function(err, call) {
+    //console.log(call.to);
+    //console.log(call.from);
 
-  client.calls(request.body.CallSid).get(function(err, call) {
-    console.log(call.to);
-    console.log(call.from);
-    
-    client.messages.create({ 
-    to: call.to, 
-    from: config.ivrNumber, 
-    body: "You have a new voicemail: " + request.body.RecordingUrl,  
-    }, function(err, message) { 
-      console.log(message.sid); 
-    });
-  
-    client.messages.create({ 
-    to: call.from, 
-    from: config.ivrNumber, 
-    body: "Your voicemail has been sent: " + request.body.RecordingUrl,  
-    }, function(err, message) { 
-      console.log(message.sid); 
+    client.messages.create({
+    to: '+19252864226',
+    from: config.ivrNumber,
+    body: "You have a new voicemail: " + request.body.RecordingUrl,
+    }, function(err, message) {
+      //console.log(message.sid);
     });
 
-  });
+    client.messages.create({
+    to: '+16027057926',
+    from: config.ivrNumber,
+    body: "Your voicemail has been sent: " + request.body.RecordingUrl,
+    }, function(err, message) {
+      //console.log(message.sid);
+    });
+
+  //});
 
   response.type('text/xml');
   response.send(twiml.toString());
