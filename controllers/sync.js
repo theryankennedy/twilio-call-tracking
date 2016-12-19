@@ -1,4 +1,5 @@
-const AccessToken = require('../twilio-node/index.js').jwt.AccessToken
+//const AccessToken = require('../twilio-node/index.js').jwt.AccessToken
+const AccessToken = require('twilio').jwt.AccessToken
 const SyncGrant = AccessToken.SyncGrant
 const randomUsername = require('../randos')
 const request = require('request-promise')

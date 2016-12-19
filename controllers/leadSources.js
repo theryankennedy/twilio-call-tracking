@@ -2,14 +2,14 @@ var twilio = require('twilio');
 var config = require('../config');
 var LeadSource = require('../models/LeadSource');
 
-var client = twilio(config.accountSid, config.authToken);
+var client = new twilio.Twilio(config.accountSid, config.authToken);
 
 exports.create = function(request, response) {
   var phoneNumberToPurchase = request.body.phoneNumber;
-
+  
   client.incomingPhoneNumbers.create({
     phoneNumber: phoneNumberToPurchase,
-    voiceCallerIdLookup: true,
+    voiceCallerIdLookup: '1',
     voiceApplicationSid: config.appSid
   }).then(function(purchasedNumber) {
     var leadSource = new LeadSource({number: purchasedNumber.phoneNumber});

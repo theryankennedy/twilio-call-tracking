@@ -1,7 +1,7 @@
-var twilio = require('twilio');
+var twilioLibrary = require('twilio');
 var config = require('../config');
 
-var client = twilio(config.accountSid, config.authToken);
+var client = new twilioLibrary.Twilio(config.accountSid, config.authToken);
 
 exports.index = function(request, response) {
 
@@ -10,8 +10,9 @@ exports.index = function(request, response) {
   client.availablePhoneNumbers('US').local.list({
     areaCode: areaCode
   }).then(function(availableNumbers) {
+    //console.dir(availableNumbers);
     response.render('availableNumbers', {
-      availableNumbers: availableNumbers.availablePhoneNumbers
+      availableNumbers: availableNumbers
     });
   }).catch(function(failureToFetchNumbers) {
     console.log('Failed to fetch numbers from API');
