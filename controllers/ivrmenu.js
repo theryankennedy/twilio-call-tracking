@@ -39,10 +39,11 @@ exports.gathers = function(request, response) {
           });
         });
       break;
-      case '2': twiml.dial(function(dialNode) {
-                  dialNode.client('human');
-                });
-      break; //concierge
+      case '2':
+        twiml.dial(function(dialNode) {
+          dialNode.client('human');
+        });
+        break; //concierge
       //case '3': twiml.dial('+13038080244'); break;
       default:
         twiml.say('Sorry, I don\'t understand that choice.').pause();
@@ -52,6 +53,7 @@ exports.gathers = function(request, response) {
   } else {
     twiml.redirect('/ivrmenu');
   }
+  
   response.type('text/xml');
   response.send(twiml.toString());
 };

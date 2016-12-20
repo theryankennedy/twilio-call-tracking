@@ -19,12 +19,13 @@
   		});
 
     	Twilio.Device.incoming(function (connection) {
-          if (confirm('Accept incoming call from ' + connection.parameters.From + '?')){
-              connection.accept();
-          }
-          else {
-              connection.reject();
-          }
+        console.log('yoyoyo');
+          //if (confirm('Accept incoming call from ' + connection.parameters.From + '?')){
+        connection.accept();
+          //}
+          //else {
+          //    connection.reject();
+          //}
       });
 
 	});
