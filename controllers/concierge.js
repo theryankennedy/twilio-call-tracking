@@ -13,7 +13,7 @@ exports.incall = function(request, response) {
 	// response.redirect('/dial.xml');
 	var twiml = new twilio.TwimlResponse();
 	  twiml.dial(function(dialNode) {
-    	dialNode.client('t_1');
+    	dialNode.client('human');
     	});
    // response.set('Content-Type', 'text/xml');
   	response.send(twiml.toString());
@@ -22,27 +22,24 @@ exports.incall = function(request, response) {
 //app.get ('/token',function(req,res){
 exports.token = function(request, response) {
 
-	var capability = new twilio.Capability(
-        // "AC45d498ae5bf3da7ab29f27436bade725",
-        // "1cec5f1c5a365de3a023c32a18c635db"
+	let identity = 'human'
+
+	var capability = new twilio.jwt.Capability(
         config.accountSid,
         config.authToken
     );
 
-		console.log(config.clientSid);
-
 	// Give the capability generator permission to make outbound calls
 	    capability.allowClientOutgoing(config.clientSid);
-	    capability.allowClientIncoming('t_1');
+	    capability.allowClientIncoming('human');
 
     // Render an HTML page which contains our capability token
 	   // response.render('concierge.jade', {
 	   //  token:capability.generate()
-	   // });
+	   // });]
+	  response.send({ token: capability.generate()});
 
-	   response.send({ token: capability.generate()});
-
-	};
+};
 
 // app.get ('/call',function(req,res){
 // 	res.render('call.ejs');
@@ -56,7 +53,7 @@ exports.token = function(request, response) {
 		console.log(tocall);
 		twiml.dial(
 		    tocall,
-		    { callerId:'+13038080244'}
+		    { callerId: config.clientCallerId}
 		 );
     response.send (twiml.toString());
 };

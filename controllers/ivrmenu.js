@@ -34,11 +34,15 @@ exports.gathers = function(request, response) {
     switch (request.body.Digits) {
       //decide on the numbers to dial in
       case '1': twiml.dial({action: config.baseUrl + '/voicemail'}, function() {
-        this.number('+19252864226', {
-          url: config.baseUrl + '/whisper'
+          this.number('+19252864226', {
+            url: config.baseUrl + '/whisper'
+          });
         });
-      });
-      case '2': twiml.dial('+13474297453'); break; //concierge
+      break;
+      case '2': twiml.dial(function(dialNode) {
+                  dialNode.client('human');
+                });
+      break; //concierge
       //case '3': twiml.dial('+13038080244'); break;
       default:
         twiml.say('Sorry, I don\'t understand that choice.').pause();

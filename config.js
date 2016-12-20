@@ -38,6 +38,7 @@ cfg.mongoUrl = process.env.MONGOLAB_URI || process.env.MONGO_URL;
 
 cfg.baseUrl = process.env.BASE_URL;
 cfg.ivrNumber = process.env.IVR_NUMBER;
+cfg.clientCallerId = process.env.TWILIO_CLIENT_CALLER_ID;
 
 // sync
 cfg.syncServiceSid = process.env.TWILIO_SYNC_SERVICE_SID;
