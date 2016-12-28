@@ -2,7 +2,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express(); //create express app
 var twilio = require('twilio');
-var LeadSource = require('../models/LeadSource');
+var CallSource = require('../models/CallSource');
+var Call = require('../models/Call');
 var Lead = require('../models/Lead');
 var config = require('../config');
 //var ejs = require('ejs');
@@ -59,5 +60,13 @@ exports.token = function(request, response) {
 };
 
 exports.show = function(request, response) {
-    return response.render('concierge');
-  };
+   // return response.render('concierge', {
+    Lead.find().then(function(leads) {
+    	return response.render('concierge', {
+      		leads: leads
+    	});
+    }).catch(function(error) {
+    	console.log('error');
+    });
+};
+

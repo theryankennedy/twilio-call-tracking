@@ -20,12 +20,12 @@
 
     	Twilio.Device.incoming(function (connection) {
         console.log('yoyoyo');
-          //if (confirm('Accept incoming call from ' + connection.parameters.From + '?')){
+          if (confirm('Accept incoming call from ' + connection.parameters.From + '?')){
         connection.accept();
-          //}
-          //else {
-          //    connection.reject();
-          //}
+          }
+          else {
+              connection.reject();
+          }
       });
 
 	});

@@ -1,6 +1,6 @@
 var availableNumbers = require('./availableNumbers');
-var leadSources = require('./leadSources');
-var leads = require('./leads');
+var callSources = require('./callSources');
+var calls = require('./calls');
 var dashboard = require('./dashboard');
 var ivr = require('./ivrmenu');
 var concierge = require('./concierge');
@@ -14,15 +14,17 @@ exports.webRoutes = function(router) {
     return resp.redirect(302, '/dashboard');
   });
   router.get('/available-numbers', availableNumbers.index);
-  router.post('/lead-source', leadSources.create);
-  router.get('/lead-source/:id/edit', leadSources.edit);
-  router.post('/lead-source/:id/update', leadSources.update);
+  router.post('/call-source', callSources.create);
+  router.get('/call-source/:id/edit', callSources.edit);
+  router.post('/call-source/:id/update', callSources.update);
   router.get('/dashboard', dashboard.show);
-  router.get('/lead/summary-by-lead-source', charts.leadsByLeadSource);
-  router.get('/lead/summary-by-city', charts.leadsByCity);
-  router.get('/leadsdata', leads.getLeads);
-  router.get('/leads', leads.show);
-  router.post('/voicetranscribe', leads.voicetranscribe);
+  router.get('/call/summary-by-call-source', charts.callsByCallSource);
+  router.get('/call/summary-by-city', charts.callsByCity);
+  router.get('/callsdata', calls.getCalls);
+  router.get('/calls', calls.show);
+  // router.get('/leadsdata', calls.getLeads);
+  // router.get('/leads', leads.show);
+  router.post('/voicetranscribe', calls.voicetranscribe);
   router.post('/ivrmenu',ivr.ivrmenu) ;
   router.post('/gathers',ivr.gathers) ;
   router.post('/whisper',ivr.whisper) ;
@@ -37,11 +39,11 @@ exports.webRoutes = function(router) {
   router.get('/synctoken', sync.token);
   router.get('/createsyncdoc', sync.createSyncDoc);
 
-  router.get('/leadsByLeadSourceChartData', charts.getLeadsByLeadSourceChartData);
-  router.get('/leadsByCityChartData', charts.getLeadsByCityChartData)
+  router.get('/callsByCallSourceChartData', charts.getCallsByCallSourceChartData);
+  router.get('/callsByCityChartData', charts.getCallsByCityChartData)
   router.get('/updateCharts', charts.updateCharts);
   router.get('/syncdoc', sync.getSyncDoc);
-  router.get('/leadsources', leadSources.show);
+  router.get('/callsources', callSources.show);
   router.get('/ad', ads.show);
   router.get('/getnumber', ads.getNumber);
   router.get('/addnumber', ads.addNumber);
@@ -51,6 +53,6 @@ exports.webRoutes = function(router) {
 };
 
 exports.webhookRoutes = function(router) {
-  router.post('/lead', leads.create);
-  router.post('/recordings', leads.addRecording);
+  router.post('/call', calls.create);
+  router.post('/recordings', calls.addRecording);
 };

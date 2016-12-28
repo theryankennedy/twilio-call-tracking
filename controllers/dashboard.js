@@ -1,10 +1,10 @@
-var LeadSource = require('../models/LeadSource');
+var CallSource = require('../models/CallSource');
 var config = require('../config');
 
 exports.show = function(request, response) {
-  LeadSource.find().then(function(leadSources) {
+  CallSource.find().then(function(callSources) {
     return response.render('dashboard', {
-      leadSources: leadSources,
+      callSources: callSources,
       appSid: config.appSid
     });
   });

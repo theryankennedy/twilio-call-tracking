@@ -1,8 +1,8 @@
 // var express = require('express');
 // var bodyParser = require('body-parser');
 var twilio = require('twilio');
-var LeadSource = require('../models/LeadSource');
-var Lead = require('../models/Lead');
+var CallSource = require('../models/CallSource');
+var Call = require('../models/Call');
 var config = require('../config');
 
 var client = twilio(config.accountSid, config.authToken);
@@ -13,7 +13,7 @@ var client = twilio(config.accountSid, config.authToken);
 exports.ivrmenu = function (request, response) {
   let twiml = new twilio.TwimlResponse();
 
-  twiml.say({voice:'woman'}, 'Welcome to LeadMetrix!');
+  twiml.say({voice:'woman'}, 'Welcome to CallMetrix!');
   twiml.gather({
     numDigits: 1,
     action: '/gathers'
@@ -67,7 +67,7 @@ exports.whisper = function(request, response) {
     action: '/connect'
   }, function () {
       this
-        .say('You have a call from Lead Metrix. Press any key to accept the call, or hang up to send the caller to voicemail.');
+        .say('You have a call from Call Metrix. Press any key to accept the call, or hang up to send the caller to voicemail.');
     })
     .say('Sending the caller to voicemail.')
     .hangup();

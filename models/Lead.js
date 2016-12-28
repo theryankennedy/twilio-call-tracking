@@ -5,18 +5,6 @@ var LeadSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  callSid: {
-    type: String,
-    required: true
-  },
-  leadSource: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'LeadSource'
-  },
-  ProNumber: {
-    type: String,
-    required: false
-  },
   city: {
     type: String,
     required: false
@@ -37,21 +25,9 @@ var LeadSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  recordingURL: {
-    type: String,
-    required: false
-  },
-   callDuration: {
-    type: String,
-    required: false
-  },
   createdOn: {
     type: Date,
     required: false,
-  },
-  transcribeText: {
-    type: String,
-    required: false
   },
   gender: {
     type: String,

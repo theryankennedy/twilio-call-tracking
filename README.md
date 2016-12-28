@@ -127,15 +127,15 @@ ngrok http -subdomain=chunky-danger-monkey 3000
 ```
 
 In your Twilio app configuration you'll need to set
-`http://<your-ngrok-domain>.ngrok.io/lead` as the callback URL. Open
+`http://<your-ngrok-domain>.ngrok.io/call` as the callback URL. Open
 the application and then click the "App configuration" button.
 
 ![app configuration button screenshot](images/app-configuration.png)
 
 The button will take you to your TwiML call tracking
 application. Under "Voice" you will find a "Request URL" input
-box. There you should put the URL to the application's lead resource
-(e.g `http://<your-ngrok-domain>.ngrok.io/lead`).
+box. There you should put the URL to the application's call resource
+(e.g `http://<your-ngrok-domain>.ngrok.io/call`).
 
 ![webhook configuration](images/webhook.png)
 
