@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  .row
+    .col-lg-12
+      table.table.table-bordered.table-hover
+        thead 
+          tr 
+            th Date
+            th From
+            th From City
+            th From State
+            th Date Created
+            th Duration (seconds)
+            th Blacklisted
+            th Blacklisted reason
+            th Recording
+            th Transcription
+        tbody
+          each call in calls
+            tr
+            .column(style="align:center;")
+              td=call.createdOn
+              td= call.callerNumber
+              td= call.city
+              td= call.state
+              td= call.createdOn
+              td= call.callDuration
+              td= call.blacklisted
+              td= call.blacklistedReason
+            td
+              if call.recordingURL == ''
+                p No Recording
+              else
+                audio(controls='')
+                  source(src='#{call.recordingURL}', type='audio/mpeg')
+            td= call.transcribeText
+
+

@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h2 Edit a call source
+  hr
+
+  if messages.length !== 0
+    .alert.alert-danger
+      ul
+        each message in messages
+          li.validationError
+            | #{message.msg}
+
+  h3 Call source phone number: #{callSourcePhoneNumber}
+  .row
+    .col-lg-4
+        form(name='editCallSource', action='/call-source/#{callSourceId}/update', method='POST')
+            .form-group
+                label(for='description') Description:
+                input(type='text', name='description', value=callSourceDescription).form-control#description
+            .form-group
+                label(for='forwardingNumber') Forwarding number:
+                input(type='text', name='forwardingNumber', value=callSourceForwardingNumber).form-control#forwardingNumber
+            input(type='hidden', name='_csrf', value="#{csrftoken}")
+            input(type='submit', value='Update').btn.btn-primary
