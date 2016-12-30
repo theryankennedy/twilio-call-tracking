@@ -12,6 +12,10 @@ var CallSourceSchema = new mongoose.Schema({
   forwardingNumber: {
     type: String,
     required: false
+  },
+  campaign: {
+    type: String,
+    required: false  
   }
 });
 

@@ -18,11 +18,12 @@ block content
       hr
       h3 Call sources
       a.btn.btn-sm.btn-default(
-          href='https://www.twilio.com/user/account/apps/' + '#{appSid}'
+          href='https://www.twilio.com/console/voice/dev-tools/twiml-apps/' + '#{appSid}'
           target='_blank') App configuration
       table.table#callSources
         thead
           tr
+            th Campaign
             th Phone number
             th Description
             th Forwarding number
@@ -30,6 +31,7 @@ block content
         tbody
           each callSource in callSources
             tr
+              td #{callSource.campaign}
               td #{callSource.number}
               td #{callSource.description}
               td #{callSource.forwardingNumber}

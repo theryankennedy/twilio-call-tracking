@@ -6,7 +6,7 @@ var client = new twilio.Twilio(config.accountSid, config.authToken);
 
 exports.create = function(request, response) {
   var phoneNumberToPurchase = request.body.phoneNumber;
-  
+
   client.incomingPhoneNumbers.create({
     phoneNumber: phoneNumberToPurchase,
     voiceCallerIdLookup: '1',
@@ -32,6 +32,7 @@ exports.edit = function(request, response) {
       callSourcePhoneNumber: foundCallSource.number,
       callSourceForwardingNumber: foundCallSource.forwardingNumber,
       callSourceDescription: foundCallSource.description,
+      callSourceCampaign: foundCallSource.campaign,
       messages: request.flash('error')
     });
   }).catch(function() {
@@ -41,7 +42,7 @@ exports.edit = function(request, response) {
 
 exports.update = function(request, response) {
   var callSourceId = request.params.id;
-
+  request.checkBody('campaign', 'Campaign cannot be empty').notEmpty();
   request.checkBody('description', 'Description cannot be empty').notEmpty();
   request.checkBody('forwardingNumber', 'Forwarding number cannot be empty')
     .notEmpty();
@@ -52,6 +53,7 @@ exports.update = function(request, response) {
   }
 
   CallSource.findOne({_id: callSourceId}).then(function(foundCallSource) {
+    foundCallSource.campaign = request.body.campaign;
     foundCallSource.description = request.body.description;
     foundCallSource.forwardingNumber = request.body.forwardingNumber;
 

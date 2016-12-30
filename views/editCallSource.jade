@@ -16,6 +16,9 @@ block content
     .col-lg-4
         form(name='editCallSource', action='/call-source/#{callSourceId}/update', method='POST')
             .form-group
+              label(for='campaign') Campaign:
+              input(type='text', name='campaign', value=callSourceCampaign).form-control#campaign
+            .form-group
                 label(for='description') Description:
                 input(type='text', name='description', value=callSourceDescription).form-control#description
             .form-group
