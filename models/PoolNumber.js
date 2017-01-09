@@ -20,6 +20,9 @@ var PoolNumberSchema = new mongoose.Schema({
   gaId: {
     type: String,
     required: false
+  },
+  adSourceId: {
+    type: mongoose.Schema.ObjectId
   }
 });
 
