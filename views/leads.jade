@@ -1,0 +1,32 @@
+extends layout
+block content
+	.row
+		.col-xs-12
+			h2 Leads
+			br
+	.row
+		.col-xs-12
+			table.table.table-bordered.table-hover
+				thead
+					tr
+						th Phone number
+						th Name
+						th City
+						th State
+						th Gender
+						th Age
+						th Campaign
+						th Lead qualified
+						th Revenue
+				tbody
+					each lead in leads
+						tr
+							td=lead.callerNumber
+							td=lead.callerName
+							td=lead.city
+							td=lead.state
+							td=lead.gender
+							td=lead.age
+							td=lead.age
+							td=lead.qualified
+							td=lead.revenue
