@@ -1,7 +1,7 @@
 doctype html
 html(lang='en')
   head
-    title= title || 'CallMetrix'
+    title= title || 'TwilioLeadTracking'
 
     // Twilio shortcut icons
     link(rel='shortcut icon',
@@ -37,7 +37,7 @@ html(lang='en')
     nav.navbar.navbar-default.navbar-fixed-top
       .container
         .navbar-header
-          a.navbar-brand(href='/dashboard') CallMetrix
+          a.navbar-brand(href='/dashboard') TwilioLeadTracking
         .navbar-collapse.collapse
           ul.nav.navbar-nav
             li
@@ -47,7 +47,9 @@ html(lang='en')
             li
               a(href="/callsources") Call Sources
             li
-              a(href="/concierge") Concierge
+              a(href="/leads") Leads              
+            li
+              a(href="/concierge") Agent
 
     //- Include page content
     #main.container

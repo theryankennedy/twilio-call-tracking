@@ -7,6 +7,13 @@ var config = require('../config');
 var leads = require('./leads');
 var sync = require('./sync');
 var charts = require('./charts');
+var rrequest = require("request");
+    // options = {
+    //   uri: 'newUrl',
+    //   timeout: 2000,
+    //   followAllRedirects: true
+    // };
+
 //var LookupsClient = require('twilio').LookupsClient;
 //var client = new LookupsClient(config.accountSid, config.authToken);
 
@@ -121,7 +128,7 @@ exports.create = function(request, response) {
   });
   //response.send(twiml.toString());
   //console.log('NEW LEAD');
-  console.log(newCall);
+ // console.log(newCall);
   return newCall.save();
 };
 
@@ -139,14 +146,25 @@ exports.addRecording = function(request, response) {
 
 //Use of Voicebase Add On
 exports.voicetranscribe = function(request, response) {
-  console.log("inside Voicebase");
+  //console.log("inside Voicebase");
   var data = JSON.parse(request.body.AddOns);
   var vbUrl= data.results.voicebase_transcription.payload[0].url; //returns https
-  console.log('vbUrl');
-  console.log(vbUrl);
-  var newUrl= 'http'+'://'+config.accountSid+':'+config.authToken+'@'+vbUrl.substring(8); //Doesn't accept https
-  console.log('newUrl');
-  console.log(newUrl);
+  // console.log('vbUrl');
+  // console.log(vbUrl);
+  var newUrl= 'https'+'://'+config.accountSid+':'+config.authToken+'@'+vbUrl.substring(8); //Doesn't accept https
+  // console.log('newUrl');
+  // console.log(newUrl);
+  var r = rrequest.get(newUrl, function (err, response, body) {
+ //   console.log(response.uri.href);
+     if (!err && response.statusCode == 200) {
+        console.log(body)}
+      });
+  //newUrl == r;
+  // console.log('r is here');
+  //  console.log(r);
+  // console.log(response.Request.uri.href);
+  
+
   rp(newUrl).then(function (transcriberesults)
   {
       //console.log("at the transcriberesults");

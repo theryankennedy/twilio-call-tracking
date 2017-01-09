@@ -2,7 +2,7 @@ extends layout
 block content
 	.row
 		.col-xs-12
-			h2 CallMetrix Concierge
+			h2 TwilioLeadTracking Agent
 			br
 		.col-xs-4
 			.form-group
@@ -17,7 +17,7 @@ block content
 					| &nbsp; End
 				&nbsp;&nbsp;&nbsp;
 
-			table.table.table-bordered.table-hover
+			table.table.table-bordered.table-hover#active-call
 				thead
 					tr
 						th Phone number
@@ -26,15 +26,20 @@ block content
 						th State
 						th Gender
 						th Age
-				tbody
-					each lead in leads
-						tr
-							td=lead.callerNumber
-							td=lead.callerName
-							td=lead.city
-							td=lead.state
-							td=lead.gender
-							td=lead.age
+						th Campaign
+						th Lead qualified
+						th $Revenue 
+				tbody#lead-table
+					//tr
+							//- td=lead.callerNumber
+							//- td=lead.callerName
+							//- td=lead.city
+							//- td=lead.state
+							//- td=lead.gender
+							//- td=lead.age
+			button.btn#savebutton
+				| &nbsp; Save
+
 
 block scripts
 	script(type='text/javascript', src='//media.twiliocdn.com/sdk/js/client/v1.4/twilio.js')

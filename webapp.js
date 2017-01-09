@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.use( bodyParser.json() );
 // Validate requests
 app.use(expressValidator());
 

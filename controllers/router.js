@@ -4,6 +4,7 @@ var calls = require('./calls');
 var dashboard = require('./dashboard');
 var ivr = require('./ivrmenu');
 var concierge = require('./concierge');
+var leads = require('./leads');
 var sync = require('./sync');
 var charts = require('./charts');
 var ads = require('./ads');
@@ -23,7 +24,8 @@ exports.webRoutes = function(router) {
   router.get('/callsdata', calls.getCalls);
   router.get('/calls', calls.show);
   // router.get('/leadsdata', calls.getLeads);
-  // router.get('/leads', leads.show);
+  router.put('/leads/:callernumber', leads.saveLead);
+  router.get('/getleadbynumber/:callernumber', leads.getByCallerNumber);
   router.post('/voicetranscribe', calls.voicetranscribe);
   router.post('/ivrmenu',ivr.ivrmenu) ;
   router.post('/gathers',ivr.gathers) ;
@@ -36,6 +38,7 @@ exports.webRoutes = function(router) {
   router.get('/token',concierge.token) ;
   router.get('/makecall',concierge.makecall) ;
   router.get('/concierge', concierge.show);
+  router.get('/leads', leads.show);
   router.get('/synctoken', sync.token);
   router.get('/createsyncdoc', sync.createSyncDoc);
 
