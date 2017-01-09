@@ -16,6 +16,10 @@ var PoolNumberSchema = new mongoose.Schema({
   dateUsed: {
     type: Date,
     require: false
+  },
+  gaId: {
+    type: String,
+    required: false
   }
 });
 
