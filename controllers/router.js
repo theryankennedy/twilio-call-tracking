@@ -52,6 +52,7 @@ exports.webRoutes = function(router) {
   router.get('/addnumber', ads.addNumber);
   router.get('/getnumbers', ads.getNumbers);
   router.get('/landing', ads.show);
+  router.get('/resetNumbers', ads.resetPoolNumberStatus);
 
 };
 
