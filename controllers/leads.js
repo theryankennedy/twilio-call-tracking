@@ -6,6 +6,7 @@ var Lead = require('../models/Lead');
 var config = require('../config');
 var sync = require('./sync');
 var charts = require('./charts');
+//var bodyParser = require('body-parser');
 //var LookupsClient = require('twilio').LookupsClient;
 //var client = new LookupsClient(config.accountSid, config.authToken);
 
@@ -59,10 +60,40 @@ exports.getLeads = function(request, response) {
   });
 };
 
-// exports.show = function(request, response) 
-//   Lead.find().then(function(leads) {
-//     return response.render('concierge', {
-//       leads: leads
-//     });
-//   });
-// };
+exports.getByCallerNumber = function(request, response) {
+  Lead.findOne({
+    callerNumber:request.params.callernumber
+  }).then(function(activelead) {
+      return response.send(activelead);
+  });
+};
+
+exports.saveLead= function(request, response) {
+  console.log('saveleads request.body');
+  console.log(request.body);
+  Lead.findOne({
+    callerNumber:request.params.callernumber
+  }).then(function(savelead) {
+      savelead.qualified = request.body.qualified;
+      if (request.body.revenue != null) {
+        savelead.revenue = request.body.revenue || '0';
+      }
+      //response.send(savelead.save());
+    return savelead.save();
+  }).then(function(savedlead) {
+    return response.send(savedlead);
+  }).catch(function(error) {
+    return response.status(500).send(error);
+  });
+};
+
+ // });
+//};
+
+exports.show = function(request, response) {
+  Lead.find().then(function(leads) {
+    return response.render('leads', {
+      leads: leads
+    });
+  });
+};

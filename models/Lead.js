@@ -36,6 +36,14 @@ var LeadSchema = new mongoose.Schema({
   age: {
     type: Number,
     required: false
+  },
+  qualified: {
+    type: Boolean,
+    required: false
+  },
+  revenue: {
+    type:Number,
+    required:false
   }
 });
 
