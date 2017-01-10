@@ -1,9 +1,6 @@
 var mongoose = require('mongoose');
 
 var CallSourceSchema = new mongoose.Schema({
-  _id : {
-    type: mongoose.Schema.ObjectId
-  },
   number: {
     type: String,
     required: true
@@ -25,6 +22,10 @@ var CallSourceSchema = new mongoose.Schema({
     required: false
   },
   keyword: {
+    type: String,
+    required: false
+  },
+  budget: {
     type: String,
     required: false
   }

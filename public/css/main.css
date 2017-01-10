@@ -12,3 +12,7 @@ footer {
 footer i {
     color:red;
 }
+
+#active-call {
+  margin-top: 50px;
+}

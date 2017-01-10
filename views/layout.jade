@@ -1,7 +1,7 @@
 doctype html
 html(lang='en')
   head
-    title= title || 'TwilioLeadTracking'
+    title= title || 'Twilio Lead Tracking'
 
     // Twilio shortcut icons
     link(rel='shortcut icon',
@@ -37,17 +37,17 @@ html(lang='en')
     nav.navbar.navbar-default.navbar-fixed-top
       .container
         .navbar-header
-          a.navbar-brand(href='/dashboard') TwilioLeadTracking
+          a.navbar-brand(href='/dashboard') Twilio Lead Tracking
         .navbar-collapse.collapse
           ul.nav.navbar-nav
             li
-              a(href="/dashboard") Home
+              a(href="/dashboard") Dashboard
             li
               a(href="/calls") Calls
             li
-              a(href="/callsources") Call Sources
+              a(href="/callsources") Campaigns
             li
-              a(href="/leads") Leads              
+              a(href="/leads") Leads
             li
               a(href="/concierge") Agent
 
@@ -56,7 +56,7 @@ html(lang='en')
       block content
 
     footer.container.
-      
+
 
     // Include jQuery and Bootstrap scripts
     script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')

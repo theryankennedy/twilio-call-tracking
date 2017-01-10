@@ -76,15 +76,14 @@ exports.addNumber = function(req, res) {
 }
 
 exports.resetPoolNumberStatus = function(req, res) {
-  PoolNumber.update({ 
-       pool: req.query.campaign 
-      }, { 
+  PoolNumber.update({
+       pool: req.query.campaign
+      }, {
         $set: { status: 'ready' }
-      }, { 
-        multi: true 
+      }, {
+        multi: true
       }, function() {
         console.log('ok we reset things');
       });
 
 }
-

@@ -21,8 +21,9 @@ var PoolNumberSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  adSourceId: {
-    type: mongoose.Schema.ObjectId
+  callSource: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CallSource'
   }
 });
 

@@ -1,43 +1,33 @@
 extends layout
 
 block content
-  h2 CallMetrix
   .row
-    .col-lg-4
-      h3 Add a new number
-      p.
-        Create a new call source by purchasing a new phone number.
-        Area code is optional
-
-      form(name='searchNumbers', action='/available-numbers', method='GET')
-        .form-group
-          label(for='areaCode') Area code
-          input.form-control(type='number', name='areaCode')
-        input.btn.btn-sm.btn-primary(type='submit', value='Search')
-
-      hr
-      h3 Call sources
-      a.btn.btn-sm.btn-default(
-          href='https://www.twilio.com/console/voice/dev-tools/twiml-apps/' + '#{appSid}'
-          target='_blank') App configuration
+      h3 Campaigns
       table.table#callSources
         thead
           tr
             th Campaign
-            th Phone number
+            th Ad Group
+            th Keyword
+            th Number Pool
             th Description
             th Forwarding number
+            th Budget
             th
         tbody
           each callSource in callSources
             tr
               td #{callSource.campaign}
-              td #{callSource.number}
+              td #{callSource.adgroup}
+              td #{callSource.keyword}
+              td #{callSource.numberPool}
               td #{callSource.description}
               td #{callSource.forwardingNumber}
+              td #{callSource.budget}
               td
                 a.btn.btn-xs.btn-default(
                   href= '/call-source/' + '#{callSource._id}' + '/edit') Edit
+
 
 block scripts
   script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js')

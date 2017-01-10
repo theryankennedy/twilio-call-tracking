@@ -90,7 +90,7 @@ exports.create = function(request, response) {
           forwardingNumber = foundCall.ProNumber;
           if (spamResults.result.result.recommendation == 'PASS') {
             twiml.dial(forwardingNumber);
-          } 
+          }
           else {
             twiml.hangup();
           }
@@ -116,7 +116,7 @@ exports.create = function(request, response) {
         console.log(error);
         console.log('New call!');
       });
-      
+
     }
   }).then(newCall => {
     // send summary results for charts to Sync
@@ -163,7 +163,7 @@ exports.voicetranscribe = function(request, response) {
   // console.log('r is here');
   //  console.log(r);
   // console.log(response.Request.uri.href);
-  
+
 
   rp(newUrl).then(function (transcriberesults)
   {
@@ -172,7 +172,7 @@ exports.voicetranscribe = function(request, response) {
       Call.findOne({recordingURL: data.results.voicebase_transcription.links.Recording}).then(function(foundCall) {
         var transcribeResults = JSON.parse(transcriberesults);
         foundCall.transcribeText = transcribeResults.media.transcripts.text;
-        
+
         return foundCall.save();
 
       }).catch(function(error) {
