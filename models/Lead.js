@@ -44,7 +44,16 @@ var LeadSchema = new mongoose.Schema({
   revenue: {
     type:Number,
     required:false
+  },
+  callSource: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CallSource'
+  },
+  poolNumber: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PoolNumber'
   }
+
 });
 
 // Create a Mongoose model from our schema

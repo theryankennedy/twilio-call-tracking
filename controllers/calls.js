@@ -78,6 +78,7 @@ exports.create = function(request, response) {
     if (spamResults.result.result.recommendation == 'PASS') {
 
       // dial an agent, ivr, or pstn number
+      console.log('forwardingNumber=' + forwardingNumber);
       if (forwardingNumber === 'agent') {
         twiml.dial({record:'record-from-answer',
                    recordingStatusCallback: config.baseUrl + '/recordings'}, 
