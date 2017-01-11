@@ -37,10 +37,10 @@
               data: JSON.stringify(params),
               dataType: "json",
               success: function (msg) {
-                  alert('Success');
+                  console.log('Success');
               },
               error: function (err){
-                  alert('Error');
+                  console.log('Error'+err);
               } 
             });
           });
