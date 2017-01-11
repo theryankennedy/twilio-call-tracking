@@ -133,7 +133,7 @@ exports.callsByCallSourceChartData = function() {
       console.log('got the calls');
       return _.countBy(existingCalls, function(call) {
           if (!call.callSource) {
-            return 'butter';
+            return 'bedbugs';
           } else {
             return call.callSource.description
           }
