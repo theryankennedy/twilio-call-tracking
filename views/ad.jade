@@ -1,12 +1,15 @@
-extends layout
+//extends layout
+
+link(rel='stylesheet', href='/css/main.css')
 
 block content
   .center-block
     .img-responsive
-      img(src='img/butter.jpg')#theAd
-  h2#phonenumber
+      img(src='img/TwilioPestControl.jpg')#theAd
+  h2#phonenumber getting number...
 
 
 block scripts
+  script(src='//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
   script(src='//cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/1.4.1/fingerprint2.min.js')
   script(src='js/ad.js')

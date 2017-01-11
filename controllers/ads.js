@@ -10,7 +10,7 @@ exports.show = function(request, response) {
 exports.getNumber = function(req, res) {
 
   if (typeof req.query.callSourceId === 'undefined') {
-    response.status(400).send('callSourceId is missing');
+    res.status(400).send('callSourceId is missing');
   }
 
   // find one that is ready, if there isn't one and we are below max buy
@@ -34,7 +34,7 @@ exports.getNumber = function(req, res) {
           status: 'used',
           dateUsed: new Date(),
           gaId: req.query.gaid,
-          callSource: mongoose.Types.ObjectId(req.query.callSourceId)
+          callSource: req.query.callSourceId
         });
         poolNumber.save();
         console.log('just bought ' + purchasedNumber.phoneNumber);

@@ -20,3 +20,13 @@ footer i {
 .chart-text {
   font-size: x-small;
 }
+
+#theAd {
+    width: 900px;
+}
+
+#phonenumber {
+    position: absolute;
+    top: 90px;
+    left: 463px;
+}
