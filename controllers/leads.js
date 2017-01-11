@@ -25,9 +25,9 @@ exports.createLead = function(params) {
   //Create new Lead
   var newLead = new Lead({
     callerNumber: params.From,
-    city: params.FromCity,
-    state: params.FromState,
-    callerName: params.CallerName,
+    city: params.FromCity || 'CA',
+    state: params.FromState || 'CA',
+    callerName: params.CallerName || 'CA',
     blacklisted: spamResults.result.result.recommendation,
     blacklistedReason: spamResults.result.result.reason,
     createdOn: new Date()
