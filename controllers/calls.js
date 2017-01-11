@@ -2,6 +2,7 @@ var twilio = require('twilio');
 var _ = require('underscore');
 var rp = require('request-promise');
 var CallSource = require('../models/CallSource');
+var PoolNumber = require('../models/PoolNumber');
 var Call = require('../models/Call');
 var config = require('../config');
 var leads = require('./leads');
@@ -25,11 +26,13 @@ exports.create = function(request, response) {
   var addOnResults = JSON.parse(request.body.AddOns);
   var spamResults = addOnResults.results['marchex_cleancall'];
   var nextCallerResults = addOnResults.results['nextcaller_advanced_caller_id'];
-  //var client = LookupsClient(config.accountSid, config.authToken);
 
+  //var client = LookupsClient(config.accountSid, config.authToken);
   //console.log('caller ID Info: ');
 
+  // create a new lead based on this phone number if we don't aleady have one
   leads.createLead(request.body);
+
   //Create new Call
   var newCall = new Call({
     callerNumber: request.body.From,
@@ -45,6 +48,7 @@ exports.create = function(request, response) {
     callDuration: '',
     createdOn: new Date()
   });
+
   //setting default age to 25 and gender to male
   if (nextCallerResults.result.records != null) {
     newCall.gender = nextCallerResults.result.records[0].gender || 'Male';
@@ -52,6 +56,59 @@ exports.create = function(request, response) {
   if (nextCallerResults.result.records != null) {
     newCall.age = parseInt(nextCallerResults.result.records[0].age || 25, 10)
   }
+
+  PoolNumber.findOne({
+    number: callSourceNumber
+  }).populate('callSource')
+  .then((foundNumberPool) => {
+
+    if (!foundNumberPool) {
+      console.log('error: cant find numberPool record in db for ' + callSourceNumber);
+      twiml.say("Sorry. We can't find a record for this number.");
+      newCall.save();
+      charts.updateAllCharts();
+      response.send(twiml.toString());
+    }
+
+    forwardingNumber = foundNumberPool.callSource.forwardingNumber;
+    newCall.callSource = foundNumberPool.callSource._id;
+    newCall.numberPool = foundNumberPool._id;
+
+    // block spam calls
+    if (spamResults.result.result.recommendation == 'PASS') {
+
+      // dial an agent, ivr, or pstn number
+      if (forwardingNumber === 'agent') {
+        twiml.dial({record:'record-from-answer',
+                   recordingStatusCallback: config.baseUrl + '/recordings'}, 
+                   (parent) => {
+                     parent.client(config.agentName);
+                   });
+      } else if (forwardingNumber === 'ivr') {
+         twiml.dial({record:'record-from-answer',
+                   recordingStatusCallback: config.baseUrl + '/recordings'}, 
+                   config.ivrNumber);
+      } else {
+        twiml.dial({
+                record:'record-from-answer',
+                recordingStatusCallback: config.baseUrl + '/recordings'
+            }, forwardingNumber);
+      }
+
+    } else {
+      twiml.hangup();
+    }
+
+    newCall.save();
+    charts.updateAllCharts();
+    response.send(twiml.toString());
+
+  }).catch((error) => {
+    console.log('error finding the number in the number poooool' + error);
+    twiml.say("error error error.");
+    response.send(twiml.toString());
+  });
+   /*
   CallSource.findOne({
     number: callSourceNumber
   }).then(function(foundCallSource) {
@@ -59,6 +116,7 @@ exports.create = function(request, response) {
       forwardingNumber = foundCallSource.forwardingNumber;
       newCall.callSource = foundCallSource._id;
 
+      // use any previously associated ProNumber for this lead
       Call.findOne({callerNumber: request.body.From}).then(function(foundCall) {
         if (foundCall != null && foundCall.ProNumber != null && foundCall.ProNumber != '') {
           forwardingNumber = foundCall.ProNumber;
@@ -72,6 +130,7 @@ exports.create = function(request, response) {
 
       newCall.ProNumber = forwardingNumber;
 
+      // block spam calls
       if (spamResults.result.result.recommendation == 'PASS') {
         twiml.dial({
               record:'record-from-answer',
@@ -80,6 +139,8 @@ exports.create = function(request, response) {
       } else {
         twiml.hangup();
       }
+
+
       response.send(twiml.toString());
 
     }
@@ -130,6 +191,7 @@ exports.create = function(request, response) {
   //console.log('NEW LEAD');
  // console.log(newCall);
   return newCall.save();
+  */
 };
 
 exports.addRecording = function(request, response) {

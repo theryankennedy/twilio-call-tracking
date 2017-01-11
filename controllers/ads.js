@@ -9,12 +9,12 @@ exports.show = function(request, response) {
 
 exports.getNumber = function(req, res) {
 
-  if (!req.query.campaign) {
-    response.status(400).send('campaign is missing');
+  if (typeof req.query.callSourceId === 'undefined') {
+    response.status(400).send('callSourceId is missing');
   }
 
   // find one that is ready, if there isn't one and we are below max buy
-  PoolNumber.findOne({$or: [{status : 'ready'}, {status : ''}]})
+  PoolNumber.findOne({$or: [{status : 'ready'}, {status : ''}], callSource : req.query.callSourceId})
   .then(poolNumber => {
     if (!poolNumber) {
       client.availablePhoneNumbers('US').local
@@ -33,7 +33,8 @@ exports.getNumber = function(req, res) {
           pool: req.query.campaign,
           status: 'used',
           dateUsed: new Date(),
-          gaId: req.query.gaid
+          gaId: req.query.gaid,
+          callSource: mongoose.Types.ObjectId(req.query.callSourceId)
         });
         poolNumber.save();
         console.log('just bought ' + purchasedNumber.phoneNumber);
@@ -56,6 +57,7 @@ exports.getNumber = function(req, res) {
 
 exports.getNumbers = function(req, res) {
   PoolNumber.find()
+  .populate('callSource')
   .then(numbers => {
     res.send(numbers);
   });

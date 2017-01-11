@@ -60,6 +60,10 @@ var CallSchema = new mongoose.Schema({
   age: {
     type: Number,
     required: false
+  },
+  poolNumber: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PoolNumber'
   }
 });
 
