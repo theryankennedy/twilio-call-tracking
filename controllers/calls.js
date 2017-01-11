@@ -30,9 +30,6 @@ exports.create = function(request, response) {
   //var client = LookupsClient(config.accountSid, config.authToken);
   //console.log('caller ID Info: ');
 
-  // create a new lead based on this phone number if we don't aleady have one
-  leads.createLead(request.body);
-
   //Create new Call
   var newCall = new Call({
     callerNumber: request.body.From,
@@ -101,6 +98,7 @@ exports.create = function(request, response) {
     }
 
     newCall.save();
+    leads.createLead(request.body, newCall);
     charts.updateAllCharts();
     response.send(twiml.toString());
 

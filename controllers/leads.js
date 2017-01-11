@@ -11,7 +11,7 @@ var charts = require('./charts');
 //var client = new LookupsClient(config.accountSid, config.authToken);
 
 
-exports.createLead = function(params) {
+exports.createLead = function(params, newCall) {
   var callSourceNumber = params.To;
   var forwardingNumber = config.ivrNumber; //'+14089164333'
   var twiml = new twilio.TwimlResponse();
@@ -30,6 +30,8 @@ exports.createLead = function(params) {
     callerName: params.CallerName,
     blacklisted: spamResults.result.result.recommendation,
     blacklistedReason: spamResults.result.result.reason,
+    callSource: newCall.callSource,
+    numberPool: newCall.numberPool,
     createdOn: new Date()
   });
 console.log('nextCallerResults');
