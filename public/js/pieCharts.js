@@ -1,10 +1,17 @@
 
-function updateChartUI(data, selectorId, type) {
+function updateChartUI(data, selectorId, type, options) {
+  
   if (type === undefined) {
     type = 'polarArea';
   }
+
+
+  //  if (type === 'bar') {
+  //   options: { scales: { yAxes: [{ beginAtZero: true }] } } ;
+  // }
   var chartContext = $("#" + selectorId).get(0).getContext("2d");
-  var theChart = new Chart(chartContext, {type: type , data: data.dataArray});
+
+  var theChart = new Chart(chartContext, {type: type , data: data.dataArray, options: options});
 }
 
 // init sync
@@ -40,7 +47,18 @@ $.getJSON('/synctoken', function(results) {
   });
    client.document("leadsByAge").then(function (doc) {
     doc.on("updated",function(updatedResults) {
-      updateChartUI(updatedResults, 'bar-by-leads-age', 'bar');
+      console.log(updatedResults);
+      updateChartUI(updatedResults, 'bar-by-leads-age', 'bar', {
+        scales: {
+          yAxes: [{
+            type: "linear",
+            ticks: {
+                max: 8,
+                min: 0,
+            }
+          }]
+        }
+      });
     });
   });
 });
@@ -62,5 +80,16 @@ $.getJSON('/updateCharts?name=leadsByGender', function(results) {
   updateChartUI(results.data, 'pie-by-leads-gender');
 });
 $.getJSON('/updateCharts?name=leadsByAge', function(results) {
-  updateChartUI(results.data, 'bar-by-leads-age','bar');
+  updateChartUI(results.data, 'bar-by-leads-age','bar', {
+      scales: {
+        yAxes: [{
+          type: "linear",
+          ticks: {
+              max: 8,
+              min: 0,
+          }
+        }]
+      }
+    }
+  );
 });

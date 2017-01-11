@@ -321,7 +321,7 @@ exports.leadsByGenderChartData = function() {
            lead_count: value[1]
          };
        });
-
+   
        summaryByGenderData = _.map(results, function(genderDataPoint) {
          return {
            value: genderDataPoint.lead_count,
@@ -347,8 +347,10 @@ exports.leadsByGenderChartData = function() {
 //leads by age
 exports.leadsByAgeChartData = function() {
    return new Promise(function(resolve, reject) {
+   // CallSource.findOne({adgroup: rats}).then(function(foundCallSource) {
      Lead.find()
      .then(function(existingLeads) {
+      //sumby?
        return _.countBy(existingLeads, function(lead){
         if(lead.age <= 10) {
           return '0 - 10';
@@ -391,7 +393,9 @@ exports.leadsByAgeChartData = function() {
            age_count: value[1]
          };
        });
-
+    console.log("age results");
+       // console.log (results);
+       // console.log(results);
        summaryByAgeData = _.map(results, function(ageDataPoint) {
          return {
            value: ageDataPoint.age_count,
@@ -399,12 +403,17 @@ exports.leadsByAgeChartData = function() {
              + ', 100%, 50%)',
            label: ageDataPoint.range || 'unknown'
          };
+         // console.log("ageDataPoint");
+         // console.log(ageDataPoint);
        });
+       // console.log("summaryByAgeData");
+       // console.log (summaryByAgeData);
 
        var data = {
          labels: summaryByAgeData.map(item => item.label),
          datasets: [
              {
+                 label: "Age data",
                  data: summaryByAgeData.map(item => item.value),
                  backgroundColor: summaryByAgeData.map(item => item.color)
              }]
@@ -412,4 +421,5 @@ exports.leadsByAgeChartData = function() {
        resolve(data);
      })
   });
+ // });
 }
