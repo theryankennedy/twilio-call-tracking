@@ -1,41 +1,87 @@
 extends layout
 
 block content
+  .row 
+    .col-lg-12
+      h3 Adgroup comparison
   .row
     .col-md-4
-      h4 Leads by state
-      p.chart-text
-        The number of leads from different states
-        data
-      canvas#pie-by-leads-state
-    .col-md-4
-      h4 Leads by gender
-      p.chart-text
-        The number of leads based on gender
-        data
-      canvas#pie-by-leads-gender
-    .col-md-4
-      h4 Leads by age
-      p.chart-text
-        The number of leads based on age
-        data
-      canvas#bar-by-leads-age
-  .row
+      h4 Keywords per Adgroup
+      p.chart-text Keywords per Adgroup for the Holiday campaign
+      padding
+        table.table.table-striped.adgroup-table
+            tr
+              //th.rotate(rowspan=5) Keyword
+              //th(colspan=3) Adgroup
+            tr
+              td 
+                strong.text-info Adgroup: Rats
+              td 
+                strong.text-info Adgroup: Bedbugs
+              td 
+                strong.text-info Adgroup: Spiders
+            tr
+              td Prevention 
+              td Prevention
+              td Prevention
+            tr
+              td Extermination 
+              td Extermination
+              td Extermination
+            tr
+              td Do It Yourself 
+              td Do It Yourself
+              td Do It Yourself
     .col-md-4
       h4 Leads by Adgroup
-      p.chart-text The number of incoming calls each call source has received
-      canvas#pie-by-call-source
+      p.chart-text The number of leads each adgroup
+      canvas#pie-by-call-source 
+    .col-md-4
+      h4 Leads by revenue
+      p.chart-text The number of leads based on revenue by adgroup data
+      canvas(height=250)#bar-by-leads-revenue
+  //Onekeyword
+  .row 
+    .col-lg-12
+      h3 Keyword Comparison
+  .row  
+    .col-md-4
+      h4 Leads by revenue
+      p.chart-text The number of leads based on revenue by keyword=extermination data
+      canvas(height=250)#bar-by-leads-key-revenue
+    .col-md-4
+      h4 Leads by keyword
+      p.chart-text The number of leads based per keywords
+      canvas#pie-by-leads-keyword
+   .row 
+    .col-lg-12
+      h3 Rats Extermination
+   .row
+    .col-md-4
+      h4 Leads by state 
+      p.chart-text The number of leads from different states data for keyword extermination
+      canvas#pie-by-leads-state
+    .col-md-4
+      h4 Leads by gender 
+      p.chart-text The number of leads based on gender data for keyword extermination
+      canvas#pie-by-leads-gender
+    .col-md-4
+      h4 Leads by age 
+      p.chart-text The number of leads based on age data for keyword extermination
+      canvas(height=250)#bar-by-leads-age
+    //- .col-md-4
+    //-   h4 Leads by revenue
+    //-   p.chart-text The number of leads based on revenue by keyword=extermination data
+    //-   canvas#bar-by-leads-key-revenue
+  //End Onekeyword
+  .row
     .col-md-4
       h4 Calls by city
-      p.chart-text
-        The number of incoming calls from different cities, based on Twilio call
-        data
+      p.chart-text The number of incoming calls from different cities, based on Twilio call data
       canvas#pie-by-city
     .col-md-4
       h4 Calls by state
-      p.chart-text
-        The number of incoming calls from different states, based on Twilio call
-        data
+      p.chart-text The number of incoming calls from different states, based on Twilio call data
       canvas#pie-by-state
   .row
     .col-lg-12
@@ -43,6 +89,6 @@ block content
 
 block scripts
   script(src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js')
-  script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.min.js')
+  script(src='//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js')
   script(src='//media.twiliocdn.com/sdk/js/sync/v0.3/twilio-sync.js')
   script(src='js/pieCharts.js')

@@ -52,8 +52,15 @@ var LeadSchema = new mongoose.Schema({
   poolNumber: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PoolNumber'
+  },
+ adgroup: {
+    type: String,
+    required:false
+  },
+  keyword: {
+    type: String,
+    required:false
   }
-
 });
 
 // Create a Mongoose model from our schema

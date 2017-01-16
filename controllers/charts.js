@@ -21,7 +21,10 @@ exports.updateAllCharts = function() {
     'callsByState',
     'leadsByState',
     'leadsByGender',
-    'leadsByAge'
+    'leadsByAge',
+    'leadsByRevenue',
+    'leadsByKeyRevenue',
+    'leadsByKeyword'
   ];
 
   let promiseList = chartNames.map(chartName => {
@@ -89,7 +92,34 @@ exports.updateChart = function(name) {
           .then(data => {
             resolve(data);
           });
-          break;   
+          break;  
+      case "leadsByRevenue":
+          exports.leadsByRevenueChartData()
+          .then(data => {
+            return sync.updateChartDoc('leadsByRevenue', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break; 
+      case "leadsByKeyRevenue":
+          exports.leadsByKeyRevenueChartData()
+          .then(data => {
+            return sync.updateChartDoc('leadsByKeyRevenue', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break;  
+       case "leadsByKeyword":
+          exports.leadsByKeywordChartData()
+          .then(data => {
+            return sync.updateChartDoc('leadsByKeyword', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break;                 
       default:
         resolve(name + ' not found');
     }
@@ -118,7 +148,7 @@ exports.callsByCallSource = function(request, response) {
     .populate('callSource')
     .then(function(existingCalls) {
       var statsByCallSource = _.countBy(existingCalls, function(call) {
-          return call.callSource.description;
+          return call.callSource.adgroup;
       });
 
       response.send(statsByCallSource);
@@ -135,12 +165,12 @@ exports.callsByCallSourceChartData = function() {
           if (!call.callSource) {
             return 'bedbugs';
           } else {
-            return call.callSource.description
+            return call.callSource.adgroup
           }
       })
     })
     .then((statsByCallSource) => {
-      console.log('got some call stats');
+    //  console.log('got some call stats');
       var results = _.map(_.zip(_.keys(statsByCallSource), _.values(statsByCallSource)), function(value) {
         return {
           description: value[0],
@@ -152,9 +182,10 @@ exports.callsByCallSourceChartData = function() {
           value: callSourceDataPoint.call_count,
           color: 'hsl(' + (180 * callSourceDataPoint.call_count/ results.length)
             + ', 100%, 50%)',
-          label: callSourceDataPoint.description
+          label: callSourceDataPoint.adgroup
         };
       });
+      //console.log("summaryByCallSourceData"+summaryByCallSourceData);
       var data = {
         labels: summaryByCallSourceData.map(item => item.label),
         datasets: [
@@ -268,12 +299,107 @@ exports.callsByStateChartData = function() {
   });
 }
 
+//leads by revenue by adgroup
+exports.leadsByRevenueChartData = function() {
+   return new Promise(function(resolve, reject) {
+      Lead.aggregate([
+        { $match: {
+            // adgroup: 'rats' 
+        }},
+        { $group: {
+            _id: "$adgroup",
+          totalrevenue: { $sum: "$revenue" }
+        }}
+      ], function (err, results) {
+      if (err) {
+          console.log(err);
+          return;
+      }
+      // console.log('-----------');
+      // console.log(results);//[ { _id: 'spiders', totalrevenue: 1700 },{},{}]
+      summaryByRevenueData = _.map(results, function(revenueDataPoint) {
+        return {
+           value: revenueDataPoint.totalrevenue,
+           color: '#27f927', 
+           //'hsl(' + (180 * revenueDataPoint.revenue_count/ results.length)
+             //+ ', 100%, 50%)',
+           label: revenueDataPoint._id || 'unknown'
+         };
+       });
+       // console.log("summaryByRevenueData");
+       // console.log (summaryByRevenueData);
+       //[ { value: 1700, color: 'hsl(NaN, 100%, 50%)', label: 'spiders' },{},{}]
+
+       var data = {
+        labels: summaryByRevenueData.map(item => item.label),
+         datasets: [
+             {
+                 label: "Revenue data",
+                 data: summaryByRevenueData.map(item => item.value),//data: [ 1700, 9898, 24898 ]
+                 backgroundColor: summaryByRevenueData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+}
+
+// Leads by Keywords
+// exports.leadsByKeywordChartData = function(request, response) {
+//   Call.find({
+//       adgroup: 'rats'
+//      }).then(function(existingCalls) {
+//     var statsByKeyword = _.countBy(existingCalls);
+//     response.send(statsByKeyword);
+//   });
+// };
+exports.leadsByKeywordChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find({
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads,'keyword');
+     })
+     .then((results) => {
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           keyword: value[0],
+           lead_count: value[1]
+         };
+       });
+
+       summaryByLeadData = _.map(results, function(keywordDataPoint) {
+         return {
+           value: keywordDataPoint.lead_count,
+           color: 'hsl(' + (180 * keywordDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: keywordDataPoint.keyword || 'unknown'
+         };
+       });
+       var data = {
+         labels: summaryByLeadData.map(item => item.label),
+         datasets: [
+             {
+                 data: summaryByLeadData.map(item => item.value),
+                 backgroundColor: summaryByLeadData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+}
+
 //leads by state
 exports.leadsByStateChartData = function() {
    return new Promise(function(resolve, reject) {
-     Lead.find()
+     Lead.find({
+      keyword: 'extermination',
+      adgroup: 'rats'
+     })
      .then(function(existingLeads) {
        return _.countBy(existingLeads, 'state');
+       console.log("now check"+ existingLeads);
      })
      .then((results) => {
 
@@ -309,7 +435,10 @@ exports.leadsByStateChartData = function() {
 //leads by gender
 exports.leadsByGenderChartData = function() {
    return new Promise(function(resolve, reject) {
-     Lead.find()
+     Lead.find({
+      keyword: 'extermination',
+      adgroup: 'rats'
+     })
      .then(function(existingLeads) {
        return _.countBy(existingLeads, 'gender');
      })
@@ -348,7 +477,10 @@ exports.leadsByGenderChartData = function() {
 exports.leadsByAgeChartData = function() {
    return new Promise(function(resolve, reject) {
    // CallSource.findOne({adgroup: rats}).then(function(foundCallSource) {
-     Lead.find()
+     Lead.find({
+      keyword: 'extermination',
+      adgroup: 'rats'
+     })
      .then(function(existingLeads) {
       //sumby?
        return _.countBy(existingLeads, function(lead){
@@ -386,29 +518,19 @@ exports.leadsByAgeChartData = function() {
        });
      })
      .then((results) => {
-
        results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
          return {
            range: value[0],
            age_count: value[1]
          };
        });
-    console.log("age results");
-       // console.log (results);
-       // console.log(results);
        summaryByAgeData = _.map(results, function(ageDataPoint) {
          return {
            value: ageDataPoint.age_count,
-           color: 'hsl(' + (180 * ageDataPoint.age_count/ results.length)
-             + ', 100%, 50%)',
+           color: '#f7f927',
            label: ageDataPoint.range || 'unknown'
          };
-         // console.log("ageDataPoint");
-         // console.log(ageDataPoint);
        });
-       // console.log("summaryByAgeData");
-       // console.log (summaryByAgeData);
-
        var data = {
          labels: summaryByAgeData.map(item => item.label),
          datasets: [
@@ -423,3 +545,51 @@ exports.leadsByAgeChartData = function() {
   });
  // });
 }
+
+//leads by revenue by adgroup per keyword
+exports.leadsByKeyRevenueChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.aggregate([
+        { $match: {
+            // adgroup: 'rats' 
+        }},
+        { $group: {
+            _id: "$keyword",
+          totalrevenue: { $sum: "$revenue" }
+        }}
+      ], function (err, results) {
+      if (err) {
+          console.log(err);
+          return;
+      }
+      // console.log('-----------');
+      // console.log(results);//[ { _id: 'spiders', totalrevenue: 1700 },{},{}]
+      summaryByRevenueData = _.map(results, function(revenueDataPoint) {
+        return {
+           value: revenueDataPoint.totalrevenue,
+           color: '#FF5733', 
+           //'hsl(' + (180 * revenueDataPoint.revenue_count/ results.length)
+             //+ ', 100%, 50%)',
+           label: revenueDataPoint._id || 'unknown'
+         };
+       });
+      // console.log('----------');
+      // console.log(summaryByRevenueData);
+       //[ { value: 1700, color: 'hsl(NaN, 100%, 50%)', label: 'spiders' },{},{}]
+
+       var data = {
+        labels: summaryByRevenueData.map(item => item.label),
+         datasets: [
+             {
+                 label: "Revenue data",
+                 data: summaryByRevenueData.map(item => item.value),//data: [ 1700, 9898, 24898 ]
+                 backgroundColor: summaryByRevenueData.map(item => item.color)
+             }]
+       };
+       console.log("keyrevenue"+data);
+       resolve(data);
+    });
+  });
+}
+
+

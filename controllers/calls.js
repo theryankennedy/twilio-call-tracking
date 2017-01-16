@@ -98,7 +98,7 @@ exports.create = function(request, response) {
     }
 
     newCall.save();
-    leads.createLead(request.body, newCall);
+    leads.createLead(request.body, newCall,foundNumberPool.callSource.adgroup,foundNumberPool.callSource.keyword);
     charts.updateAllCharts();
     response.send(twiml.toString());
 

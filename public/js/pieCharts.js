@@ -4,8 +4,6 @@ function updateChartUI(data, selectorId, type, options) {
   if (type === undefined) {
     type = 'polarArea';
   }
-
-
   //  if (type === 'bar') {
   //   options: { scales: { yAxes: [{ beginAtZero: true }] } } ;
   // }
@@ -61,6 +59,46 @@ $.getJSON('/synctoken', function(results) {
       });
     });
   });
+
+client.document("leadsByRevenue").then(function (doc) {
+    doc.on("updated",function(updatedResults) {
+      console.log(updatedResults);
+      updateChartUI(updatedResults, 'bar-by-leads-revenue', 'bar', {
+        scales: {
+          yAxes: [{
+            type: "linear",
+            ticks: {
+                max: 30000,
+                min: 0,
+            }
+          }]
+        }
+      });
+    });
+  });
+
+client.document("leadsByKeyRevenue").then(function (doc) {
+    doc.on("updated",function(updatedkeyResults) {
+      console.log(updatedkeyResults);
+      updateChartUI(updatedkeyResults, 'bar-by-leads-key-revenue', 'bar', {
+        scales: {
+          yAxes: [{
+            type: "linear",
+            ticks: {
+                max: 30000,
+                stepSize: 5000,
+                min: 0,
+            }
+          }]
+        }
+      });
+    });
+  });
+  client.document("leadsByKeyword").then(function (doc) {
+    doc.on("updated",function(updatedResults) {
+      updateChartUI(updatedResults, 'pie-by-leads-keyword');
+    });
+  });
 });
 
 // init the charts on page load
@@ -79,6 +117,9 @@ $.getJSON('/updateCharts?name=leadsByState', function(results) {
 $.getJSON('/updateCharts?name=leadsByGender', function(results) {
   updateChartUI(results.data, 'pie-by-leads-gender');
 });
+$.getJSON('/updateCharts?name=leadsByKeyword', function(results) {
+  updateChartUI(results.data, 'pie-by-leads-keyword');
+});
 $.getJSON('/updateCharts?name=leadsByAge', function(results) {
   updateChartUI(results.data, 'bar-by-leads-age','bar', {
       scales: {
@@ -86,6 +127,35 @@ $.getJSON('/updateCharts?name=leadsByAge', function(results) {
           type: "linear",
           ticks: {
               max: 8,
+              min: 0,
+          }
+        }]
+      }
+    }
+  );
+});
+$.getJSON('/updateCharts?name=leadsByRevenue', function(results) {
+  updateChartUI(results.data, 'bar-by-leads-revenue','bar', {
+      scales: {
+        yAxes: [{
+          type: "linear",
+          ticks: {
+              max: 30000,
+              min: 0,
+          }
+        }]
+      }
+    }
+  );
+});
+$.getJSON('/updateCharts?name=leadsByKeyRevenue', function(results) {
+  updateChartUI(results.data, 'bar-by-leads-key-revenue','bar', {
+      scales: {
+        yAxes: [{
+          type: "linear",
+          ticks: {
+              max: 30000,
+              stepSize: 5000,
               min: 0,
           }
         }]

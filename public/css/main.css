@@ -30,3 +30,7 @@ footer i {
     top: 90px;
     left: 463px;
 }
+.adgroup-table .rotate {
+    vertical-align: middle;
+    transform: rotate(-90deg);
+}
