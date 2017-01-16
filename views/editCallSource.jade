@@ -11,7 +11,7 @@ block content
           li.validationError
             | #{message.msg}
 
-  h3 Call source phone number: #{callSourcePhoneNumber}
+  h3 Call source id: #{callSourceId}
   .row
     .col-lg-4
         form(name='editCallSource', action='/call-source/#{callSourceId}/update', method='POST')
@@ -19,8 +19,17 @@ block content
               label(for='campaign') Campaign:
               input(type='text', name='campaign', value=callSourceCampaign).form-control#campaign
             .form-group
+                label(for='adgroup') Ad Group:
+                input(type='text', name='adgroup', value=callSourceAdGroup).form-control#adgroup
+            .form-group
+                label(for='keyword') Keyword:
+                input(type='text', name='keyword', value=callSourceKeyword).form-control#keyword
+            .form-group
                 label(for='description') Description:
                 input(type='text', name='description', value=callSourceDescription).form-control#description
+            .form-group
+                label(for='budget') Budget:
+                input(type='text', name='budget', value=callSourceBudget).form-control#budget
             .form-group
                 label(for='forwardingNumber') Forwarding number:
                 input(type='text', name='forwardingNumber', value=callSourceForwardingNumber).form-control#forwardingNumber

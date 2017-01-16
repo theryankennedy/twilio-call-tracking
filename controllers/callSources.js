@@ -5,7 +5,7 @@ var CallSource = require('../models/CallSource');
 
 var client = new twilio.Twilio(config.accountSid, config.authToken);
 
-exports.create = function(request, response) {
+exports.createFromNumber = function(request, response) {
   var phoneNumberToPurchase = request.body.phoneNumber;
 
   client.incomingPhoneNumbers.create({
@@ -25,6 +25,20 @@ exports.create = function(request, response) {
   });
 };
 
+exports.create = function(request, response) {
+  var callSource = new CallSource({number: 'none'});
+  callSource.save()
+  .then((savedCallSource) => {
+    console.log('Saving call source');
+    response.redirect(303, '/call-source/' + savedCallSource._id + '/edit');
+  }).catch((error) => {
+    console.log('Could not create new call source:');
+    console.log(error);
+    response.status(500).send('Could not create new call source');
+  });
+}
+
+
 exports.edit = function(request, response) {
   var callSourceId = request.params.id;
   CallSource.findOne({_id: callSourceId}).then(function(foundCallSource) {
@@ -34,6 +48,9 @@ exports.edit = function(request, response) {
       callSourceForwardingNumber: foundCallSource.forwardingNumber,
       callSourceDescription: foundCallSource.description,
       callSourceCampaign: foundCallSource.campaign,
+      callSourceAdGroup: foundCallSource.adgroup,
+      callSourceKeyword: foundCallSource.keyword,
+      callSourceBudget: foundCallSource.budget,
       messages: request.flash('error')
     });
   }).catch(function() {
@@ -58,6 +75,10 @@ exports.update = function(request, response) {
     foundCallSource.description = request.body.description;
     foundCallSource.forwardingNumber = request.body.forwardingNumber;
 
+    foundCallSource.adgroup = request.body.adgroup;
+    foundCallSource.keyword = request.body.keyword;
+    foundCallSource.budget = request.body.budget;
+
     return foundCallSource.save();
   }).then(function(savedCallSource) {
     return response.redirect(303, '/dashboard');
@@ -68,6 +89,8 @@ exports.update = function(request, response) {
 
 exports.show = function(request, response) {
   CallSource.find().then(function(callSources) {
+
+    // sort by adgroup then keyword
     callSources.sort(function(a,b){
       if(a.adgroup< b.adgroup) return -1;
       if(a.adgroup >b.adgroup) return 1;
@@ -75,6 +98,7 @@ exports.show = function(request, response) {
       if(a.keyword >b.keyword) return 1;
       return 0;
     });
+    
     return response.render('callsources', {
       callSources: callSources,
       appSid: config.appSid

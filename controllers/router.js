@@ -15,7 +15,7 @@ exports.webRoutes = function(router) {
     return resp.redirect(302, '/dashboard');
   });
   router.get('/available-numbers', availableNumbers.index);
-  router.post('/call-source', callSources.create);
+  router.get('/call-source', callSources.create);
   router.get('/call-source/:id/edit', callSources.edit);
   router.post('/call-source/:id/update', callSources.update);
   router.get('/dashboard', dashboard.show);
