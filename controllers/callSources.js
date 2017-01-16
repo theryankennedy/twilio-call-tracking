@@ -1,5 +1,6 @@
 var twilio = require('twilio');
 var config = require('../config');
+var _ = require('underscore');
 var CallSource = require('../models/CallSource');
 
 var client = new twilio.Twilio(config.accountSid, config.authToken);
@@ -67,6 +68,13 @@ exports.update = function(request, response) {
 
 exports.show = function(request, response) {
   CallSource.find().then(function(callSources) {
+    callSources.sort(function(a,b){
+      if(a.adgroup< b.adgroup) return -1;
+      if(a.adgroup >b.adgroup) return 1;
+      if(a.keyword< b.keyword) return -1;
+      if(a.keyword >b.keyword) return 1;
+      return 0;
+    });
     return response.render('callsources', {
       callSources: callSources,
       appSid: config.appSid
