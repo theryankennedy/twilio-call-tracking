@@ -17,14 +17,18 @@ exports.updateAllCharts = function() {
 
   let chartNames = [
     'leadsByAdgroup',
-    'callsByCity',
-    'callsByState',
+    'leadsByRevenue',
+    'leadsByKeyRevenue',
+    'leadsByKeyword',
     'leadsByState',
     'leadsByGender',
     'leadsByAge',
-    'leadsByRevenue',
-    'leadsByKeyRevenue',
-    'leadsByKeyword'
+    'diyByState',
+    'diyByGender',
+    'diyByAge',
+    'preventionByState',
+    'preventionByGender',
+    'preventionByAge'
   ];
 
   let promiseList = chartNames.map(chartName => {
@@ -48,24 +52,7 @@ exports.updateChart = function(name) {
           resolve(data);
         });
         break;
-      case "callsByCity":
-        exports.callsByCityChartData()
-        .then(data => {
-          return sync.updateChartDoc('callsByCity', data);
-        })
-        .then(data => {
-          resolve(data);
-        });
-        break;
-      case "callsByState":
-          exports.callsByStateChartData()
-          .then(data => {
-            return sync.updateChartDoc('callsByState', data);
-          })
-          .then(data => {
-            resolve(data);
-          });
-          break;
+      //Start keyword = extermination
       case "leadsByState":
           exports.leadsByStateChartData()
           .then(data => {
@@ -92,7 +79,66 @@ exports.updateChart = function(name) {
           .then(data => {
             resolve(data);
           });
+          break; 
+          //End keyword extermination
+      //Start keyword = diy
+      case "diyByState":
+          exports.diyByStateChartData()
+          .then(data => {
+            return sync.updateChartDoc('diyByState', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break; 
+      case "diyByGender":
+          exports.diyByGenderChartData()
+          .then(data => {
+            return sync.updateChartDoc('diyByGender', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break;             
+      case "diyByAge":
+          exports.diyByAgeChartData()
+          .then(data => {
+            return sync.updateChartDoc('diyByAge', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
           break;  
+          //End keyword diy
+      //Start keyword = prevention
+      case "preventionByState":
+          exports.preventionByStateChartData()
+          .then(data => {
+            return sync.updateChartDoc('preventionByState', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break; 
+      case "preventionByGender":
+          exports.preventionByGenderChartData()
+          .then(data => {
+            return sync.updateChartDoc('preventionByGender', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break;   
+      case "preventionByAge":
+          exports.preventionByAgeChartData()
+          .then(data => {
+            return sync.updateChartDoc('preventionByAge', data);
+          })
+          .then(data => {
+            resolve(data);
+          });
+          break;  
+ //End keyword prevention
       case "leadsByRevenue":
           exports.leadsByRevenueChartData()
           .then(data => {
@@ -264,7 +310,56 @@ exports.leadsByKeywordChartData = function() {
   });
 }
 
+//leads by revenue by adgroup per keyword
+exports.leadsByKeyRevenueChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.aggregate([
+        { $match: {
+            // adgroup: 'rats' 
+        }},
+        { $group: {
+            _id: "$keyword",
+          totalrevenue: { $sum: "$revenue" }
+        }}
+      ], function (err, results) {
+      if (err) {
+          console.log(err);
+          return;
+      }
+      // console.log('-----------');
+      // console.log(results);//[ { _id: 'spiders', totalrevenue: 1700 },{},{}]
+      summaryByRevenueData = _.map(results, function(revenueDataPoint) {
+        return {
+           value: revenueDataPoint.totalrevenue,
+           color: '#FF5733', 
+           //'hsl(' + (180 * revenueDataPoint.revenue_count/ results.length)
+             //+ ', 100%, 50%)',
+           label: revenueDataPoint._id || 'unknown'
+         };
+       });
+      // console.log('----------');
+      // console.log(summaryByRevenueData);
+       //[ { value: 1700, color: 'hsl(NaN, 100%, 50%)', label: 'spiders' },{},{}]
 
+       var data = {
+        labels: summaryByRevenueData.map(item => item.label),
+         datasets: [
+             {
+                 label: "Revenue data",
+                 data: summaryByRevenueData.map(item => item.value),//data: [ 1700, 9898, 24898 ]
+                 backgroundColor: summaryByRevenueData.map(item => item.color)
+             }]
+       };
+       console.log("keyrevenue"+data);
+       resolve(data);
+    });
+  });
+}
+
+
+
+
+//FOR ONE KEYWORD EXTERMINATION
 //leads by state
 exports.leadsByStateChartData = function() {
    return new Promise(function(resolve, reject) {
@@ -273,11 +368,11 @@ exports.leadsByStateChartData = function() {
       adgroup: 'rats'
      })
      .then(function(existingLeads) {
+       // console.log("***************");
+       // console.log(existingLeads);
        return _.countBy(existingLeads, 'state');
-       console.log("now check"+ existingLeads);
      })
      .then((results) => {
-
        results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
          return {
            state: value[0],
@@ -421,50 +516,320 @@ exports.leadsByAgeChartData = function() {
  // });
 }
 
-//leads by revenue by adgroup per keyword
-exports.leadsByKeyRevenueChartData = function() {
+//END FOR KEYWORD EXTERMINATION
+
+//FOR ONE KEYWORD DIY
+//leads by state
+exports.diyByStateChartData = function() {
    return new Promise(function(resolve, reject) {
-     Lead.aggregate([
-        { $match: {
-            // adgroup: 'rats' 
-        }},
-        { $group: {
-            _id: "$keyword",
-          totalrevenue: { $sum: "$revenue" }
-        }}
-      ], function (err, results) {
-      if (err) {
-          console.log(err);
-          return;
-      }
-      // console.log('-----------');
-      // console.log(results);//[ { _id: 'spiders', totalrevenue: 1700 },{},{}]
-      summaryByRevenueData = _.map(results, function(revenueDataPoint) {
-        return {
-           value: revenueDataPoint.totalrevenue,
-           color: '#FF5733', 
-           //'hsl(' + (180 * revenueDataPoint.revenue_count/ results.length)
-             //+ ', 100%, 50%)',
-           label: revenueDataPoint._id || 'unknown'
+     Lead.find({
+      keyword: 'do it yourself',
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, 'state');
+       console.log("DIY check"+ existingLeads);
+     })
+     .then((results) => {
+
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           state: value[0],
+           lead_count: value[1]
          };
        });
-      // console.log('----------');
-      // console.log(summaryByRevenueData);
-       //[ { value: 1700, color: 'hsl(NaN, 100%, 50%)', label: 'spiders' },{},{}]
+
+       summaryByStateData = _.map(results, function(stateDataPoint) {
+         return {
+           value: stateDataPoint.lead_count,
+           color: 'hsl(' + (180 * stateDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: stateDataPoint.state || 'unknown'
+         };
+       });
 
        var data = {
-        labels: summaryByRevenueData.map(item => item.label),
+         labels: summaryByStateData.map(item => item.label),
          datasets: [
              {
-                 label: "Revenue data",
-                 data: summaryByRevenueData.map(item => item.value),//data: [ 1700, 9898, 24898 ]
-                 backgroundColor: summaryByRevenueData.map(item => item.color)
+                 data: summaryByStateData.map(item => item.value),
+                 backgroundColor: summaryByStateData.map(item => item.color)
              }]
        };
-       console.log("keyrevenue"+data);
        resolve(data);
-    });
+     })
   });
 }
 
+//leads by gender
+exports.diyByGenderChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find({
+      keyword: 'do it yourself',
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, 'gender');
+     })
+     .then((results) => {
 
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           gender: value[0],
+           lead_count: value[1]
+         };
+       });
+   
+       summaryByGenderData = _.map(results, function(genderDataPoint) {
+         return {
+           value: genderDataPoint.lead_count,
+           color: 'hsl(' + (180 * genderDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: genderDataPoint.gender || 'unknown'
+         };
+       });
+
+       var data = {
+         labels: summaryByGenderData.map(item => item.label),
+         datasets: [
+             {
+                 data: summaryByGenderData.map(item => item.value),
+                 backgroundColor: summaryByGenderData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+}
+
+//leads by age
+exports.diyByAgeChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find({
+      keyword: 'do it yourself',
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, function(lead){
+        if(lead.age <= 10) {
+          return '0 - 10';
+        } 
+        if(lead.age >10 && lead.age <= 20) {
+          return '11 - 20';
+        } 
+        if(lead.age >20 && lead.age <= 30) {
+          return '21 - 30';
+        } 
+        if(lead.age >30 && lead.age <= 40) {
+          return '31 - 40';
+        } 
+        if(lead.age >40 && lead.age <= 50) {
+          return '41 - 50';
+        } 
+        if(lead.age >50 && lead.age <= 60) {
+          return '51 - 60';
+        } 
+        if(lead.age >60 && lead.age <= 70) {
+          return '61 - 70';
+        } 
+        if(lead.age >70 && lead.age <= 80) {
+          return '71 - 80';
+        } 
+        if(lead.age >80 && lead.age <= 90) {
+          return '81 - 90';
+        } 
+        if(lead.age >90 && lead.age <= 100) {
+          return '91 - 100';
+        } 
+
+       });
+     })
+     .then((results) => {
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           range: value[0],
+           age_count: value[1]
+         };
+       });
+       // console.log("***************");
+       // console.log(results);
+       summaryByAgeData = _.map(results, function(ageDataPoint) {
+         return {
+           value: ageDataPoint.age_count,
+           color: '#f7f927',
+           label: ageDataPoint.range || 'unknown'
+         };
+       });
+       var data = {
+         labels: summaryByAgeData.map(item => item.label),
+         datasets: [
+             {
+                 label: "Age data",
+                 data: summaryByAgeData.map(item => item.value),
+                 backgroundColor: summaryByAgeData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+ // });
+}
+
+//END FOR KEYWORD DIY
+
+//FOR ONE KEYWORD PREVENTION
+//leads by state
+exports.preventionByStateChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find({
+      keyword: 'prevention',
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, 'state');
+       console.log("prevention check"+ existingLeads);
+     })
+     .then((results) => {
+
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           state: value[0],
+           lead_count: value[1]
+         };
+       });
+
+       summaryByStateData = _.map(results, function(stateDataPoint) {
+         return {
+           value: stateDataPoint.lead_count,
+           color: 'hsl(' + (180 * stateDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: stateDataPoint.state || 'unknown'
+         };
+       });
+
+       var data = {
+         labels: summaryByStateData.map(item => item.label),
+         datasets: [
+             {
+                 data: summaryByStateData.map(item => item.value),
+                 backgroundColor: summaryByStateData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+}
+
+//leads by gender
+exports.preventionByGenderChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find({
+      keyword: 'prevention',
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, 'gender');
+     })
+     .then((results) => {
+
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           gender: value[0],
+           lead_count: value[1]
+         };
+       });
+   
+       summaryByGenderData = _.map(results, function(genderDataPoint) {
+         return {
+           value: genderDataPoint.lead_count,
+           color: 'hsl(' + (180 * genderDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: genderDataPoint.gender || 'unknown'
+         };
+       });
+
+       var data = {
+         labels: summaryByGenderData.map(item => item.label),
+         datasets: [
+             {
+                 data: summaryByGenderData.map(item => item.value),
+                 backgroundColor: summaryByGenderData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+}
+
+//leads by age
+exports.preventionByAgeChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find({
+      keyword: 'prevention',
+      adgroup: 'rats'
+     })
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads, function(lead){
+        if(lead.age <= 10) {
+          return '0 - 10';
+        } 
+        if(lead.age >10 && lead.age <= 20) {
+          return '11 - 20';
+        } 
+        if(lead.age >20 && lead.age <= 30) {
+          return '21 - 30';
+        } 
+        if(lead.age >30 && lead.age <= 40) {
+          return '31 - 40';
+        } 
+        if(lead.age >40 && lead.age <= 50) {
+          return '41 - 50';
+        } 
+        if(lead.age >50 && lead.age <= 60) {
+          return '51 - 60';
+        } 
+        if(lead.age >60 && lead.age <= 70) {
+          return '61 - 70';
+        } 
+        if(lead.age >70 && lead.age <= 80) {
+          return '71 - 80';
+        } 
+        if(lead.age >80 && lead.age <= 90) {
+          return '81 - 90';
+        } 
+        if(lead.age >90 && lead.age <= 100) {
+          return '91 - 100';
+        } 
+
+       });
+     })
+     .then((results) => {
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           range: value[0],
+           age_count: value[1]
+         };
+       });
+       summaryByAgeData = _.map(results, function(ageDataPoint) {
+         return {
+           value: ageDataPoint.age_count,
+           color: '#f7f927',
+           label: ageDataPoint.range || 'unknown'
+         };
+       });
+       var data = {
+         labels: summaryByAgeData.map(item => item.label),
+         datasets: [
+             {
+                 label: "Age data",
+                 data: summaryByAgeData.map(item => item.value),
+                 backgroundColor: summaryByAgeData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+ // });
+}
+
+//END FOR KEYWORD PREVENTION
