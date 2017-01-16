@@ -2,26 +2,20 @@ extends layout
 
 block content
   .row
-      h3 Campaigns
+      h3 Twilio Pest Control - Holiday Promo
       table.table#callSources
         thead
           tr
-            th Campaign
             th Ad Group
             th Keyword
-            th Number Pool
-            th Description
             th Forwarding number
             th Budget
             th
         tbody
           each callSource in callSources
             tr
-              td #{callSource.campaign}
               td #{callSource.adgroup}
               td #{callSource.keyword}
-              td #{callSource.numberPool}
-              td #{callSource.description}
               td #{callSource.forwardingNumber}
               td #{callSource.budget}
               td

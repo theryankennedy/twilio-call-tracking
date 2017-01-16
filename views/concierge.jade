@@ -1,22 +1,83 @@
 extends layout
 block content
 	.row
-		.col-xs-12
-			h4 Twilio Lead Tracking Agent
-			br
-		.col-xs-4
-			.form-group
-				input.form-control#number(type='text', name='number', placeholder='Enter a phone number to call')
-			.form-group
-				button.btn.btn-success#callbutton
-					span.glyphicon.glyphicon-earphone
-					| &nbsp; Call
-				&nbsp;&nbsp;&nbsp;
-				button.btn.btn-danger#disconnectbutton
-					span.glyphicon.glyphicon-phone-alt
-					| &nbsp; End
-				&nbsp;&nbsp;&nbsp;
-				&nbsp;&nbsp;&nbsp;
+		.col-md-5
+			div.agent-info
+				h3 Lead Tracking Agent
+				br
+				div.incoming-call-message
+					h4 waiting for call...
+				div.incoming-call-controls
+					button.btn.btn-success#answerbutton
+						span.glyphicon.glyphicon-earphone
+						| &nbsp; Answer
+					&nbsp;&nbsp;&nbsp;
+					button.btn.btn-danger#finishbutton
+						span.glyphicon.glyphicon-phone-alt
+						| &nbsp; End Call
+					&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;
+				div.outbound-call-controls
+					.form-group
+						input.form-control#number(type='text', name='number', placeholder='Enter a phone number to call')
+					.form-group
+						button.btn.btn-success#callbutton
+							span.glyphicon.glyphicon-earphone
+							| &nbsp; Call
+						&nbsp;&nbsp;&nbsp;
+						button.btn.btn-danger#disconnectbutton
+							span.glyphicon.glyphicon-phone-alt
+							| &nbsp; End
+						&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;
+			div.agent-data-box.agent-data-box-input 
+					dl.dl-horizontal
+						dt Lead Qualified
+						dd 
+							input(type='checkbox', name='cbox1')#campaign
+						dt Revenue
+						dd 
+							input(type='text', name='LeadRevenue')#revenue
+					button.btn.btn-success.center-block#savebutton
+						| Save
+		.col-md-7
+			div.data-container
+				div.agent-data-box.agent-data-box-campaign 
+					dl.dl-horizontal
+						dt Campaign
+						dd Twilio Pest Control
+						dt Ad Group
+						dd#Adgroup
+						dt Keyword
+						dd#Keyword
+				div.agent-data-box.agent-data-box-lead 
+					h6 From Whitepages Pro Caller Identification, Advanced Caller ID by Next Caller
+					dl.dl-horizontal
+						dt Phone Number
+						dd#PhoneNumber
+						dt Name
+						dd#LeadName
+						dt City
+						dd#City
+						dt State
+						dd#State
+						dt Gender
+						dd#Gender
+						dt Age
+						dd#Age
+				div.agent-data-box.agent-data-box-website 
+					dl.dl-horizontal
+						dt Type of property
+						dd Residential
+						dt Size of property
+						dd Large - 4 rooms
+						dt Evidence
+						dd Rodents observed
+						dt Severity
+						dd Critical
+	
+	.row.table-row
+		.col-md-12
 			table.table.table-bordered.table-hover#active-call
 				thead
 					tr
@@ -41,9 +102,8 @@ block content
 							//- td=lead.state
 							//- td=lead.gender
 							//- td=lead.age
-			button.btn#savebutton
-				| Save
-
+		//	button.btn#savebutton
+		//		| Save
 
 block scripts
 	script(type='text/javascript', src='//media.twiliocdn.com/sdk/js/client/v1.4/twilio.js')

@@ -30,7 +30,80 @@ footer i {
     top: 90px;
     left: 463px;
 }
+
 .adgroup-table .rotate {
     vertical-align: middle;
     transform: rotate(-90deg);
+
+h6 {
+    margin-left: 10px; 
+}
+
+.agent-data-box {
+    margin-right: 0;
+    margin-left: 0;
+    background-color: #fff;
+    border-color: #ddd;
+    border-width: 1px;
+    border-radius: 4px 4px 0 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    position: relative;
+    padding: 45px 15px 15px;
+    margin: 0 -15px 15px;
+    border-style: solid;
+}
+
+.agent-data-box:after {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.agent-data-box:after {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.agent-data-box-campaign:after {
+    content: "Campaign Information";
+}
+.agent-data-box-lead:after {
+    content: "Twilio Add On Data";
+}
+.agent-data-box-website:after {
+    content: "Form on Website";
+}
+.agent-data-box-input:after {
+    content: "Lead Status and Revenue"
+}
+
+.table-row {
+    display: none;
+}
+
+.outbound-call-controls {
+    display: none;
+}
+.incoming-call-controls {
+    display: none;
+}
+.data-container {
+    display: none;
+}
+.agent-data-box-input {
+    display: none;
+    margin-top: 40px;
+    margin-right: 40px;
 }
