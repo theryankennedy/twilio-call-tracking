@@ -16,7 +16,7 @@ exports.updateAllCharts = function() {
   console.log('updating charts');
 
   let chartNames = [
-    'callsByCallSource',
+    'leadsByAdgroup',
     'callsByCity',
     'callsByState',
     'leadsByState',
@@ -39,10 +39,10 @@ exports.updateAllCharts = function() {
 exports.updateChart = function(name) {
   return new Promise(function(resolve, reject) {
     switch (name) {
-      case "callsByCallSource":
-        exports.callsByCallSourceChartData()
+      case "leadsByAdgroup":
+        exports.leadsByAdgroupChartData()
         .then(data => {
-          return sync.updateChartDoc('callsByCallSource', data);
+          return sync.updateChartDoc('leadsByAdgroup', data);
         })
         .then(data => {
           resolve(data);
@@ -142,163 +142,6 @@ exports.updateCharts = function(req, res) {
 }
 
 
-// calls by call source
-exports.callsByCallSource = function(request, response) {
-  Call.find()
-    .populate('callSource')
-    .then(function(existingCalls) {
-      var statsByCallSource = _.countBy(existingCalls, function(call) {
-          return call.callSource.adgroup;
-      });
-
-      response.send(statsByCallSource);
-    });
-};
-exports.callsByCallSourceChartData = function() {
-   return new Promise(function(resolve, reject) {
-     console.log('about to Call.find');
-    Call.find()
-    .populate('callSource')
-    .then(function(existingCalls) {
-      console.log('got the calls');
-      return _.countBy(existingCalls, function(call) {
-          if (!call.callSource) {
-            return 'bedbugs';
-          } else {
-            return call.callSource.adgroup
-          }
-      })
-    })
-    .then((statsByCallSource) => {
-    //  console.log('got some call stats');
-      var results = _.map(_.zip(_.keys(statsByCallSource), _.values(statsByCallSource)), function(value) {
-        return {
-          description: value[0],
-          call_count: value[1]
-        };
-      });
-      var summaryByCallSourceData = _.map(results, function(callSourceDataPoint) {
-        return {
-          value: callSourceDataPoint.call_count,
-          color: 'hsl(' + (180 * callSourceDataPoint.call_count/ results.length)
-            + ', 100%, 50%)',
-          label: callSourceDataPoint.adgroup
-        };
-      });
-      //console.log("summaryByCallSourceData"+summaryByCallSourceData);
-      var data = {
-        labels: summaryByCallSourceData.map(item => item.label),
-        datasets: [
-            {
-                data: summaryByCallSourceData.map(item => item.value),
-                backgroundColor: summaryByCallSourceData.map(item => item.color)
-            }]
-      };
-      resolve(data);
-    })
-    .catch(function(failure) {
-      console.log('Failed getting the data');
-      console.log('Error was:');
-      console.log(failure);
-      reject(failure);
-    });
-  });
-}
-exports.getCallsByCallSourceChartData = function(request, response) {
-  exports.callsByCallSourceChartData()
-  .then(data => {
-    response.send(data);
-  })
-}
-
-// calls by city
-exports.callsByCity = function(request, response) {
-  Call.find().then(function(existingCalls) {
-    var statsByCity = _.countBy(existingCalls, 'city');
-    response.send(statsByCity);
-  });
-};
-exports.callsByCityChartData = function() {
-   return new Promise(function(resolve, reject) {
-     Call.find()
-     .then(function(existingCalls) {
-       return _.countBy(existingCalls, 'city');
-     })
-     .then((results) => {
-
-       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
-         return {
-           city: value[0],
-           call_count: value[1]
-         };
-       });
-
-       summaryByCityData = _.map(results, function(cityDataPoint) {
-         return {
-           value: cityDataPoint.call_count,
-           color: 'hsl(' + (180 * cityDataPoint.call_count/ results.length)
-             + ', 100%, 50%)',
-           label: cityDataPoint.city || 'unknown'
-         };
-       });
-
-       var data = {
-         labels: summaryByCityData.map(item => item.label),
-         datasets: [
-             {
-                 data: summaryByCityData.map(item => item.value),
-                 backgroundColor: summaryByCityData.map(item => item.color)
-             }]
-       };
-       resolve(data);
-     })
-  });
-}
-exports.getCallsByCityChartData = function(request, response) {
-  exports.callsByCityChartData()
-  .then(data => {
-    response.send(data);
-  })
-}
-
-
-exports.callsByStateChartData = function() {
-   return new Promise(function(resolve, reject) {
-     Call.find()
-     .then(function(existingCalls) {
-       return _.countBy(existingCalls, 'state');
-     })
-     .then((results) => {
-
-       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
-         return {
-           state: value[0],
-           call_count: value[1]
-         };
-       });
-
-       summaryByStateData = _.map(results, function(stateDataPoint) {
-         return {
-           value: stateDataPoint.call_count,
-           color: 'hsl(' + (180 * stateDataPoint.call_count/ results.length)
-             + ', 100%, 50%)',
-           label: stateDataPoint.state || 'unknown'
-         };
-       });
-
-       var data = {
-         labels: summaryByStateData.map(item => item.label),
-         datasets: [
-             {
-                 data: summaryByStateData.map(item => item.value),
-                 backgroundColor: summaryByStateData.map(item => item.color)
-             }]
-       };
-       resolve(data);
-     })
-  });
-}
-
 //leads by revenue by adgroup
 exports.leadsByRevenueChartData = function() {
    return new Promise(function(resolve, reject) {
@@ -315,7 +158,7 @@ exports.leadsByRevenueChartData = function() {
           console.log(err);
           return;
       }
-      // console.log('-----------');
+      // console.log('-----------LOOK HERE');
       // console.log(results);//[ { _id: 'spiders', totalrevenue: 1700 },{},{}]
       summaryByRevenueData = _.map(results, function(revenueDataPoint) {
         return {
@@ -344,15 +187,46 @@ exports.leadsByRevenueChartData = function() {
   });
 }
 
+// Leads by Adgroup
+exports.leadsByAdgroupChartData = function() {
+   return new Promise(function(resolve, reject) {
+     Lead.find()
+     .then(function(existingLeads) {
+       return _.countBy(existingLeads,'adgroup');
+     })
+     .then((results) => {
+       results = _.map(_.zip(_.keys(results), _.values(results)), function(value) {
+         return {
+           adgroup: value[0],
+           lead_count: value[1]
+         };
+       });
+       // console.log("**********************");
+       // console.log(results);
+
+       summaryByLeadData = _.map(results, function(adgroupDataPoint) {
+         return {
+           value: adgroupDataPoint.lead_count,
+           color: 'hsl(' + (180 * adgroupDataPoint.lead_count/ results.length)
+             + ', 100%, 50%)',
+           label: adgroupDataPoint.adgroup || 'unknown'
+         };
+       });
+       var data = {
+         labels: summaryByLeadData.map(item => item.label),
+         datasets: [
+             {
+                 data: summaryByLeadData.map(item => item.value),
+                 backgroundColor: summaryByLeadData.map(item => item.color)
+             }]
+       };
+       resolve(data);
+     })
+  });
+}
+
+
 // Leads by Keywords
-// exports.leadsByKeywordChartData = function(request, response) {
-//   Call.find({
-//       adgroup: 'rats'
-//      }).then(function(existingCalls) {
-//     var statsByKeyword = _.countBy(existingCalls);
-//     response.send(statsByKeyword);
-//   });
-// };
 exports.leadsByKeywordChartData = function() {
    return new Promise(function(resolve, reject) {
      Lead.find({
@@ -389,6 +263,7 @@ exports.leadsByKeywordChartData = function() {
      })
   });
 }
+
 
 //leads by state
 exports.leadsByStateChartData = function() {

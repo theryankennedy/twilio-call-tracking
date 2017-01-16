@@ -19,8 +19,8 @@ exports.webRoutes = function(router) {
   router.get('/call-source/:id/edit', callSources.edit);
   router.post('/call-source/:id/update', callSources.update);
   router.get('/dashboard', dashboard.show);
-  router.get('/call/summary-by-call-source', charts.callsByCallSource);
-  router.get('/call/summary-by-city', charts.callsByCity);
+  // router.get('/call/summary-by-call-source', charts.callsByCallSource);
+  // router.get('/call/summary-by-city', charts.callsByCity);
   router.get('/callsdata', calls.getCalls);
   router.get('/calls', calls.show);
   // router.get('/leadsdata', calls.getLeads);
@@ -42,8 +42,8 @@ exports.webRoutes = function(router) {
   router.get('/synctoken', sync.token);
   router.get('/createsyncdoc', sync.createSyncDoc);
 
-  router.get('/callsByCallSourceChartData', charts.getCallsByCallSourceChartData);
-  router.get('/callsByCityChartData', charts.getCallsByCityChartData)
+  //router.get('/callsByCallSourceChartData', charts.getCallsByCallSourceChartData);
+  //router.get('/callsByCityChartData', charts.getCallsByCityChartData)
   router.get('/updateCharts', charts.updateCharts);
   router.get('/syncdoc', sync.getSyncDoc);
   router.get('/callsources', callSources.show);

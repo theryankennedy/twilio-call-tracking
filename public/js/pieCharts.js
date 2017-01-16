@@ -17,22 +17,22 @@ $.getJSON('/synctoken', function(results) {
   var client = new Twilio.Sync.Client(results.token);
 
   // listen for updates
-  client.document("callsByCallSource").then(function (doc) {
+  client.document("leadsByAdgroup").then(function (doc) {
     doc.on("updated",function(updatedResults) {
       console.log('updating');
-      updateChartUI(updatedResults, 'pie-by-call-source');
+      updateChartUI(updatedResults, 'pie-by-leads-adgroup');
     });
   });
-  client.document("callsByCity").then(function (doc) {
-    doc.on("updated",function(updatedResults) {
-      updateChartUI(updatedResults, 'pie-by-city');
-    });
-  });
-  client.document("callsByState").then(function (doc) {
-    doc.on("updated",function(updatedResults) {
-      updateChartUI(updatedResults, 'pie-by-state');
-    });
-  });
+  // client.document("callsByCity").then(function (doc) {
+  //   doc.on("updated",function(updatedResults) {
+  //     updateChartUI(updatedResults, 'pie-by-city');
+  //   });
+  // });
+  // client.document("callsByState").then(function (doc) {
+  //   doc.on("updated",function(updatedResults) {
+  //     updateChartUI(updatedResults, 'pie-by-state');
+  //   });
+  // });
    client.document("leadsByState").then(function (doc) {
     doc.on("updated",function(updatedResults) {
       updateChartUI(updatedResults, 'pie-by-leads-state');
@@ -102,15 +102,15 @@ client.document("leadsByKeyRevenue").then(function (doc) {
 });
 
 // init the charts on page load
-$.getJSON('/updateCharts?name=callsByCallSource', function(results) {
-  updateChartUI(results.data, 'pie-by-call-source');
+$.getJSON('/updateCharts?name=leadsByAdgroup', function(results) {
+  updateChartUI(results.data, 'pie-by-leads-adgroup');
 });
-$.getJSON('/updateCharts?name=callsByCity', function(results) {
-  updateChartUI(results.data, 'pie-by-city');
-});
-$.getJSON('/updateCharts?name=callsByState', function(results) {
-  updateChartUI(results.data, 'pie-by-state');
-});
+// $.getJSON('/updateCharts?name=callsByCity', function(results) {
+//   updateChartUI(results.data, 'pie-by-city');
+// });
+// $.getJSON('/updateCharts?name=callsByState', function(results) {
+//   updateChartUI(results.data, 'pie-by-state');
+//});
 $.getJSON('/updateCharts?name=leadsByState', function(results) {
   updateChartUI(results.data, 'pie-by-leads-state');
 });
