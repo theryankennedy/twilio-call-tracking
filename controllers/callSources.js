@@ -81,7 +81,7 @@ exports.update = function(request, response) {
 
     return foundCallSource.save();
   }).then(function(savedCallSource) {
-    return response.redirect(303, '/dashboard');
+    return response.redirect(303, '/callsources');
   }).catch(function(error) {
     return response.status(500).send('Could not save the call source');
   });
