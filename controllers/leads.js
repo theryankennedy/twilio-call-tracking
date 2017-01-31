@@ -111,9 +111,6 @@ exports.generateLeads = (request, response) => {
 
   var callSourceId = request.query.callSourceId;
   var numberOfLeads = request.query.numberOfLeads;
-  var age = request.query.age || faker.random.number({min: 24, max: 62});
-  var state = request.query.state || faker.random.arrayElement(['AZ', 'CA', 'NY']);
-  var revenue = request.query.revenue || faker.random.number({min: 50, max: 700});
 
   CallSource.findOne({
     _id: callSourceId
@@ -127,13 +124,18 @@ exports.generateLeads = (request, response) => {
     var i;
     for (i = 0; i < numberOfLeads; i++) {
 
+      var age = request.query.age || faker.random.number({min: 24, max: 62});
+      var state = request.query.state || faker.random.arrayElement(['AZ', 'CA', 'NY']);
+      var revenue = request.query.revenue || faker.random.number({min: 50, max: 700});
+      var gender = request.query.gender || faker.random.arrayElement(['Male', 'Female']);
+
       //Create new Lead
       var newLead = new Lead({
         callerNumber: faker.phone.phoneNumber('1##########'),
         city: faker.address.city(),
         state: state,
         callerName: faker.name.firstName() + ' ' + faker.name.lastName(),
-        gender: faker.random.arrayElement(['Male', 'Female']),
+        gender: gender,
         age: age,
         blacklisted: "PASS",
         blacklistedReason: "CleanCall",
