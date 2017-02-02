@@ -2,6 +2,8 @@
  $.getJSON('/token', function(response) {
 
    console.log('hello');
+   showAllUiStuff();
+   $("#form-data-box").hide();
 
 	  Twilio.Device.setup(response.token);
   	Twilio.Device.ready(function(device) {
@@ -50,8 +52,9 @@
           //console.log(lead);
 
           // show lead information
-          $("#Adgroup").html("rats");
-          $("#Keyword").html("prevention");
+          $("#Campaign").html("-not done-");
+          $("#Adgroup").html("-not done-");
+          $("#Keyword").html("-not done-");
 
           $("#PhoneNumber").html(lead.callerNumber);
           $("#LeadName").html(lead.callerName);
@@ -59,11 +62,11 @@
           $("#State").html(lead.state);
           $("#Gender").html(lead.gender);
           $("#Age").html(lead.age);
-        
+
 
           // update table and show lead information
           $("#active-call #lead-table").append("<tr><td>"+lead.callerNumber+'</td><td>'+lead.callerName+'</td><td>'+lead.city+'</td><td>'+lead.state+'</td><td>'+lead.gender+'</td><td>'+lead.age+'</td><td>blank</td><td><input type="checkbox" id="cbox1"><br>Yes</td><td><input type="text" name="LeadRevenue" id="revenue"></td><td>Residential</td><td>Large - 4 rooms</td><td>Rodents observed</td><td>Critical</td></tr>');
-          
+
           $( "#savebutton" ).click(function() {
             var params = {
               qualified: $("#cbox1").prop("checked"),
@@ -91,7 +94,7 @@
               },
               error: function (err){
                   console.log('Error'+err);
-              } 
+              }
             });
           });
 
@@ -104,7 +107,7 @@
           }
             */
          });
-        
+
       });
 
 	});
@@ -114,5 +117,21 @@
 function showAllUiStuff() {
   $(".agent-data-box-input").show();
   $(".data-container").show();
+  //$("#form-data-box").show();
 }
 
+function clearUI() {
+  $("#Campaign").html("");
+  $("#Adgroup").html("");
+  $("#Keyword").html("");
+
+  $("#PhoneNumber").html();
+  $("#LeadName").html();
+  $("#City").html();
+  $("#State").html();
+  $("#Gender").html();
+  $("#Age").html();
+
+  $("#cbox1").prop("checked", true);
+  $("#revenue").val('');
+}
