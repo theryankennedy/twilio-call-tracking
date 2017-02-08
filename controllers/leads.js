@@ -3,9 +3,12 @@ var _ = require('underscore');
 var rp = require('request-promise');
 //var CallSource = require('../models/CallSource');
 var Lead = require('../models/Lead');
+var CallSource = require('../models/CallSource');
+
 var config = require('../config');
 var sync = require('./sync');
 var charts = require('./charts');
+var faker = require('faker');
 //var bodyParser = require('body-parser');
 //var LookupsClient = require('twilio').LookupsClient;
 //var client = new LookupsClient(config.accountSid, config.authToken);
@@ -45,7 +48,7 @@ console.log('nextCallerResults');
   if (nextCallerResults.result.records != null) {
     newLead.age = parseInt(nextCallerResults.result.records[0].age || 25, 10)
   }
-  
+
   Lead.findOne({
     callerNumber: params.From
   }).then(function(foundLead) {
@@ -100,4 +103,57 @@ exports.show = function(request, response) {
       leads: leads
     });
   });
+};
+
+
+
+exports.generateLeads = (request, response) => {
+
+  var callSourceId = request.query.callSourceId;
+  var numberOfLeads = request.query.numberOfLeads;
+
+  CallSource.findOne({
+    _id: callSourceId
+  }).then(function(callsource) {
+
+    if (!callsource) {
+      return response.status(400);
+    }
+
+    var leads = [];
+    var i;
+    for (i = 0; i < numberOfLeads; i++) {
+
+      var age = request.query.age || faker.random.number({min: 24, max: 62});
+      var state = request.query.state || faker.random.arrayElement(['AZ', 'CA', 'NY']);
+      var revenue = request.query.revenue || faker.random.number({min: 50, max: 700});
+      var gender = request.query.gender || faker.random.arrayElement(['Male', 'Female']);
+
+      //Create new Lead
+      var newLead = new Lead({
+        callerNumber: faker.phone.phoneNumber('1##########'),
+        city: faker.address.city(),
+        state: state,
+        callerName: faker.name.firstName() + ' ' + faker.name.lastName(),
+        gender: gender,
+        age: age,
+        blacklisted: "PASS",
+        blacklistedReason: "CleanCall",
+        callSource: callSourceId,
+        createdOn: new Date(),
+        adgroup: callsource.adgroup,
+        keyword: callsource.keyword,
+        revenue: revenue,
+      });
+
+      newLead.save();
+      leads.push(newLead);
+    }
+
+    return response.send(leads);
+
+  }).catch(function(error) {
+    return response.status(500).send(error);
+  });;
+
 };

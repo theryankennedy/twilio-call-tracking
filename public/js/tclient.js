@@ -50,8 +50,8 @@
           //console.log(lead);
 
           // show lead information
-          $("#Adgroup").html();
-          $("#Keyword").html();
+          $("#Adgroup").html("rats");
+          $("#Keyword").html("prevention");
 
           $("#PhoneNumber").html(lead.callerNumber);
           $("#LeadName").html(lead.callerName);
@@ -111,4 +111,8 @@
 
 });
 
+function showAllUiStuff() {
+  $(".agent-data-box-input").show();
+  $(".data-container").show();
+}
 

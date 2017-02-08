@@ -24,6 +24,9 @@ exports.webRoutes = function(router) {
   router.get('/callsdata', calls.getCalls);
   router.get('/calls', calls.show);
   // router.get('/leadsdata', calls.getLeads);
+  
+  router.get('/leads/generate', leads.generateLeads);
+
   router.put('/leads/:callernumber', leads.saveLead);
   router.get('/getleadbynumber/:callernumber', leads.getByCallerNumber);
   router.post('/voicetranscribe', calls.voicetranscribe);
