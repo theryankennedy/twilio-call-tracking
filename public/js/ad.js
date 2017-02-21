@@ -18,6 +18,8 @@ ga(function(tracker) {
     //console.log(components); // an array of FP components
   });
 
+
+
   $.getJSON('/getnumber?callSourceId=' + '587575506b211b03967b1362' + '&gaid=' + clientId, function(results) {
     console.log(results);
     var isMobile = false; //initiate as false

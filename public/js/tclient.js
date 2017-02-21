@@ -1,5 +1,6 @@
 
- $.getJSON('/token', function(response) {
+
+$.getJSON('/token', function(response) {
 
    console.log('hello');
    showAllUiStuff();
@@ -51,21 +52,31 @@
         $.get('/getleadbynumber/'+connection.parameters.From , function(lead){
           //console.log(lead);
 
-          // show lead information
-          $("#Campaign").html("-not done-");
-          $("#Adgroup").html("-not done-");
-          $("#Keyword").html("-not done-");
+          var processedLead = {};
 
-          $("#PhoneNumber").html(lead.callerNumber);
-          $("#LeadName").html(lead.callerName);
-          $("#City").html(lead.city);
-          $("#State").html(lead.state);
-          $("#Gender").html(lead.gender);
-          $("#Age").html(lead.age);
+          // replace lead info with akshay's info for the webinar
+          processedLead.callerNumber = '858-699-0026';
+          processedLead.callerName = 'Akshay Bharadwaj';
+          processedLead.city = "San Diego";
+          processedLead.state = "CA";
+          processedLead.gender = "Male";
+          processedLead.age = "26";
+
+          // show lead information
+          $("#Campaign").html("OK Pest Control - Feburary 2017");
+          $("#Adgroup").html("rats");
+          $("#Keyword").html("extermination");
+
+          $("#PhoneNumber").html(processedLead.callerNumber);
+          $("#LeadName").html(processedLead.callerName);
+          $("#City").html(processedLead.city);
+          $("#State").html(processedLead.state);
+          $("#Gender").html(processedLead.gender);
+          $("#Age").html(processedLead.age);
 
 
           // update table and show lead information
-          $("#active-call #lead-table").append("<tr><td>"+lead.callerNumber+'</td><td>'+lead.callerName+'</td><td>'+lead.city+'</td><td>'+lead.state+'</td><td>'+lead.gender+'</td><td>'+lead.age+'</td><td>blank</td><td><input type="checkbox" id="cbox1"><br>Yes</td><td><input type="text" name="LeadRevenue" id="revenue"></td><td>Residential</td><td>Large - 4 rooms</td><td>Rodents observed</td><td>Critical</td></tr>');
+          $("#active-call #lead-table").append("<tr><td>"+processedLead.callerNumber+'</td><td>'+processedLead.callerName+'</td><td>'+processedLead.city+'</td><td>'+processedLead.state+'</td><td>'+processedLead.gender+'</td><td>'+processedLead.age+'</td><td>blank</td><td><input type="checkbox" id="cbox1"><br>Yes</td><td><input type="text" name="LeadRevenue" id="revenue"></td><td>Residential</td><td>Large - 4 rooms</td><td>Rodents observed</td><td>Critical</td></tr>');
 
           $( "#savebutton" ).click(function() {
             var params = {
