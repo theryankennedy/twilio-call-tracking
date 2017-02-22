@@ -49,7 +49,7 @@ ga(function(tracker) {
     if (isMobile) {
       // show as a tel link for mobile
       $('#phonenumber').html(results.number);
-      window.location.assign("tel:+" + results);
+      window.location.assign("tel:+" + results.number);
     } else  {
       // format and display the number
       var formattedNumber = formatPhoneNumber(results.number.substr(2));
