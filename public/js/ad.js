@@ -39,7 +39,8 @@ ga(function(tracker) {
 
     var isMobile = false; //initiate as false
 
-    console.log('GETNUMBER: ' + results);
+    console.log('GETNUMBER:');
+    console.dir(results);
 
     // complicated device detection test, set to isMobile
     if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)
@@ -56,6 +57,7 @@ ga(function(tracker) {
     }
 
     var numberTrackingId = results._id || '123';
+    console.log('numberTrackingId: ' + numberTrackingId);
     ga('set', 'numberTrackingId', numberTrackingId);
 
   });
