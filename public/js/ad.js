@@ -8,6 +8,8 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-92199103-2', 'auto');
 ga('send', 'pageview');
 
+
+
 // get urlParams
 var urlParams;
 (window.onpopstate = function () {
@@ -34,8 +36,14 @@ ga(function(tracker) {
   var callSourceId = urlParams.callSourceId || defaultCallSourceId;
   console.log('callSourceId: ' + callSourceId);
 
+  var keywords = urlParams.keywords || "";
+  console.log('keywords: ' + keywords);
+
+   var gclid = urlParams.gclid || "";
+  console.log('gclid: ' + gclid);
+
   // call our application backend to get a phone number and sessionId
-  $.getJSON('/getnumber?callSourceId=' + callSourceId + '&gaid=' + clientId, function(results) {
+  $.getJSON('/getnumber?callSourceId=' + callSourceId + '&gaid=' + clientId + '&keywords=' + keywords+ '&gclid=' + gclid, function(results) {
 
     var isMobile = false; //initiate as false
 

@@ -21,6 +21,14 @@ var PoolNumberSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  keywords: {
+    type: String,
+    required: false
+  },
+  gclid: {
+    type: String,
+    required: false
+  },
   callSource: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'CallSource'
