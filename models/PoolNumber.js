@@ -21,7 +21,7 @@ var PoolNumberSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  keywords: {
+  keyword: {
     type: String,
     required: false
   },

@@ -35,7 +35,7 @@ exports.getNumber = function(req, res) {
           dateUsed: new Date(),
           gaId: req.query.gaid,
           gclid: req.query.gclid,
-          keywords: req.query.keywords,
+          keyword: req.query.keyword,
           callSource: req.query.callSourceId
         });
         poolNumber.save();

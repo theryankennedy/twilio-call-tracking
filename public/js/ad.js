@@ -20,8 +20,9 @@ var urlParams;
         query  = window.location.search.substring(1);
 
     urlParams = {};
-    while (match = search.exec(query))
+    while (match = search.exec(query)){
        urlParams[decode(match[1])] = decode(match[2]);
+     }
 })();
 
 // once ga is ready...
@@ -36,14 +37,15 @@ ga(function(tracker) {
   var callSourceId = urlParams.callSourceId || defaultCallSourceId;
   console.log('callSourceId: ' + callSourceId);
 
-  var keywords = urlParams.keywords || "";
-  console.log('keywords: ' + keywords);
+  var keyword = urlParams.keyword || "";
+  console.log('keyword: ' + keyword);
+  console.log('urlParams: ' + urlParams);
 
    var gclid = urlParams.gclid || "";
   console.log('gclid: ' + gclid);
 
   // call our application backend to get a phone number and sessionId
-  $.getJSON('/getnumber?callSourceId=' + callSourceId + '&gaid=' + clientId + '&keywords=' + keywords+ '&gclid=' + gclid, function(results) {
+  $.getJSON('/getnumber?callSourceId=' + callSourceId + '&gaid=' + clientId + '&keyword=' + keyword+ '&gclid=' + gclid, function(results) {
 
     var isMobile = false; //initiate as false
 
