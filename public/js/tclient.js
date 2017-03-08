@@ -62,7 +62,7 @@ $.getJSON('/token', function(response) {
           processedLead.gender = "Male";
           processedLead.age = "26";
 
-          // show lead information
+          // show lead information, hardcoded for webinar
           $("#Campaign").html("OK Pest Control - Feburary 2017");
           $("#Adgroup").html("rats");
           $("#Keyword").html("extermination");
