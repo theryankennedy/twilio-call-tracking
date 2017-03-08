@@ -53,7 +53,6 @@ exports.getNumber = function(req, res) {
       poolNumber.save();
       res.send(poolNumber);
     }
-
   });
 }
 
@@ -81,13 +80,12 @@ exports.addNumber = function(req, res) {
 
 exports.resetPoolNumberStatus = function(req, res) {
   PoolNumber.update({
-       pool: req.query.campaign
-      }, {
-        $set: { status: 'ready' }
-      }, {
-        multi: true
-      }, function() {
-        console.log('ok we reset things');
-      });
-
+     pool: req.query.campaign
+    }, {
+      $set: { status: 'ready' }
+    }, {
+      multi: true
+    }, function() {
+      console.log('ok we reset things');
+  });
 }

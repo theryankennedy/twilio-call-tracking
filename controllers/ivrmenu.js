@@ -18,7 +18,7 @@ exports.ivrmenu = function (request, response) {
     numDigits: 1,
     action: '/gathers'
   }, (gatherNode) => {
-    gatherNode.say({voice:'woman'},'If you wish to speak to a professional, press 1. If you wish to speak to concierge, press 2');
+    gatherNode.say({voice:'woman'},'If you wish to speak to a professional, press 1. If you wish to speak to an agent, press 2');
   });
 
   twiml.redirect('/ivrmenu');
@@ -53,7 +53,7 @@ exports.gathers = function(request, response) {
   } else {
     twiml.redirect('/ivrmenu');
   }
-  
+
   response.type('text/xml');
   response.send(twiml.toString());
 };
@@ -67,7 +67,7 @@ exports.whisper = function(request, response) {
     action: '/connect'
   }, function () {
       this
-        .say('You have a call from Call Metrix. Press any key to accept the call, or hang up to send the caller to voicemail.');
+        .say('You have a call from Lead Metrix. Press any key to accept the call, or hang up to send the caller to voicemail.');
     })
     .say('Sending the caller to voicemail.')
     .hangup();

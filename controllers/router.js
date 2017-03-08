@@ -3,7 +3,7 @@ var callSources = require('./callSources');
 var calls = require('./calls');
 var dashboard = require('./dashboard');
 var ivr = require('./ivrmenu');
-var concierge = require('./concierge');
+var agent = require('./agent');
 var leads = require('./leads');
 var sync = require('./sync');
 var charts = require('./charts');
@@ -24,7 +24,7 @@ exports.webRoutes = function(router) {
   router.get('/callsdata', calls.getCalls);
   router.get('/calls', calls.show);
   // router.get('/leadsdata', calls.getLeads);
-  
+
   router.get('/leads/generate', leads.generateLeads);
 
   router.put('/leads/:callernumber', leads.saveLead);
@@ -37,10 +37,10 @@ exports.webRoutes = function(router) {
   router.post('/voicemail',ivr.voicemail) ;
   router.post('/sendVoicemailSMS',ivr.sendVoicemailSMS) ;
   router.post('/hangup',ivr.hangup) ;
-  router.get('/incall',concierge.incall) ;
-  router.get('/token',concierge.token) ;
-  router.get('/makecall',concierge.makecall) ;
-  router.get('/concierge', concierge.show);
+  router.get('/incall',agent.incall) ;
+  router.get('/token',agent.token) ;
+  router.get('/makecall',agent.makecall) ;
+  router.get('/agent', agent.show);
   router.get('/leads', leads.show);
   router.get('/synctoken', sync.token);
   router.get('/createsyncdoc', sync.createSyncDoc);

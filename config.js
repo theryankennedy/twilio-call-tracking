@@ -1,5 +1,4 @@
 var dotenv = require('dotenv');
-
 dotenv.config({path: '.env'});
 
 var twimlApp = require('./util/twimlApp');
@@ -31,17 +30,23 @@ twimlApp.getTwimlAppSid('Call tracking app').then(function(appSid) {
   cfg.appSid = process.env.TWILIO_APP_SID;
 });
 
-
 // MongoDB connection string - MONGO_URL is for local dev,
 // MONGOLAB_URI is for the MongoLab add-on for Heroku deployment
 cfg.mongoUrl = process.env.MONGOLAB_URI || process.env.MONGO_URL;
 
+// The root url of your deployed app.
 cfg.baseUrl = process.env.BASE_URL;
+
+// The Twilio phone number for your IVR
 cfg.ivrNumber = process.env.IVR_NUMBER;
+
+// A Twilio phone number for calling the Agent
 cfg.clientCallerId = process.env.TWILIO_CLIENT_CALLER_ID;
+
+// The Twilio Client agent name
 cfg.agentName = process.env.AGENT_NAME;
 
-// sync
+// Twilio Sync config
 cfg.syncServiceSid = process.env.TWILIO_SYNC_SERVICE_SID;
 cfg.syncApiKey = process.env.TWILIO_API_KEY;
 cfg.syncApiSecret = process.env.TWILIO_API_SECRET;

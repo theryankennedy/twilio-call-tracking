@@ -8,7 +8,8 @@ var config = require('../config');
 var leads = require('./leads');
 var sync = require('./sync');
 var charts = require('./charts');
-var rrequest = require("request");
+var rrequest = require('request');
+
     // options = {
     //   uri: 'newUrl',
     //   timeout: 2000,
@@ -78,13 +79,13 @@ exports.create = function(request, response) {
       console.log('forwardingNumber=' + forwardingNumber);
       if (forwardingNumber === 'agent') {
         twiml.dial({record:'record-from-answer',
-                   recordingStatusCallback: config.baseUrl + '/recordings'}, 
+                   recordingStatusCallback: config.baseUrl + '/recordings'},
                    (parent) => {
                      parent.client(config.agentName);
                    });
       } else if (forwardingNumber === 'ivr') {
          twiml.dial({record:'record-from-answer',
-                   recordingStatusCallback: config.baseUrl + '/recordings'}, 
+                   recordingStatusCallback: config.baseUrl + '/recordings'},
                    config.ivrNumber);
       } else {
         twiml.dial({

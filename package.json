@@ -1,11 +1,9 @@
 {
   "name": "call-tracking-node",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Call tracking using Twilio, TwiML and Express.js",
   "main": "index.js",
-  "scripts": {
-    "test": "export NODE_ENV=test && mocha test"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "https://code.hq.twilio.com/rkennedy/call-tracking-node"
@@ -18,7 +16,7 @@
     "webhooks",
     "voip"
   ],
-  "author": "Kevin Whinnery and some SEs",
+  "author": "Twilio Sales Engineers",
   "license": "MIT",
   "bugs": {
     "url": "https://code.hq.twilio.com/rkennedy/call-tracking-node/issues"
