@@ -91,7 +91,7 @@ AGENT_NAME=
 The base url where this app is running.
 BASE_URL=https://twilio-call-tracking.herokuapp.com
 
-Your Google Analytics Id, injected into the /ad page
+Your Google Analytics Tracking Id, injected into the /ad page
 GA_ID=
 
 MongoDb url, described above:
