@@ -4,7 +4,7 @@ var twilio = require('twilio');
 var client = new twilio.Twilio(config.accountSid, config.authToken);
 
 exports.show = function(request, response) {
-    return response.render('ad');
+    return response.render('ad', {'googleAnalyticsId' : config.googleAnalyticsId });
 };
 
 exports.getNumber = function(req, res) {
@@ -12,6 +12,20 @@ exports.getNumber = function(req, res) {
   if (typeof req.query.callSourceId === 'undefined') {
     res.status(400).send('callSourceId is missing');
   }
+
+  // callSourceId can be added as a custom dimension in google adwords
+  // Currently used in this demo to identify the keyword/adword combo
+  let callSourceId = req.query.callSourceId;
+
+  // google analytics session id
+  let gaid = req.query.gaid;
+
+  // globally unique tracking parameters - adwords to analytics
+  //  enable autotagging to pass gclid
+  let gclid = req.query.gclid;
+
+  // keywords, passed from google ad
+  let keyword = req.query.keyword;
 
   // find one that is ready, if there isn't one and we are below max buy
   PoolNumber.findOne({$or: [{status : 'ready'}, {status : ''}], callSource : req.query.callSourceId})

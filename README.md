@@ -1,73 +1,13 @@
 # Call tracking with Twilio, Node.js, and Express
 
-## AddOns
-marchex_cleancall, voicebase_transcription (need to add webhook url in console)
+This application demonstrates how to use Twilio track calls and measure the effectiveness of marketing campaigns.
 
-## Sync setup
-Create an Api Key and Secret in the console (https://www.twilio.com/console/voice/dev-tools/api-keys).  Use them for these in the .env file:
-TWILIO_API_KEY
-TWILIO_API_SECRET
-
-Use this to generate a Sync service.  The result of this command will have a sid that
-will be the TWILIO_SYNC_SERVICE_SID
-```bash
-curl -X POST https://preview.twilio.com/Sync/Services \
- -d 'FriendlyName=CallTrackingSyncService' \
- -u '$TWILIO_API_KEY:$TWILIO_API_SECRET'
- ```
-
-also for sync you need to npm install in the twilio-node directory
-
-This application demonstrates how to use Twilio track calls and measure
-the effectiveness of marketing campaigns.  A tutorial walkthrough exists [here](https://www.twilio.com/docs/tutorials/walkthrough/call-tracking/node/express) to help with setting this up.
 
 ## Running the Project on Your Machine
 
-To run this project on your computer, download or clone the source. You will
-also need to download and install either [Node.js](http://nodejs.org/)
-or [io.js](https://iojs.org/en/index.html), both of which should also install
-[npm](https://www.npmjs.com/).
+This project requires [Node.js](http://nodejs.org/) 6 or greater and MongoDB.
 
-You will also need to [sign up for a Twilio account](https://www.twilio.com/try-twilio)
-if you don't have one already.
-
-### Install Dependencies
-
-Navigate to the project directory in your terminal and run:
-
-```bash
-npm install
-```
-
-This should install all of our project dependencies from npm into a local
-`node_modules` folder.
-
-### Create a TwiML App
-
-This project is configured to use a **TwiML App**, which allows us to easily set the voice URLs for all Twilio phone numbers we purchase in this app.
-
-Create a new TwiML app at https://www.twilio.com/user/account/apps/add and use its `Sid` as the `TWIML_APP_SID` environment variable wherever you run this app.
-
-![Creating a TwiML App](http://howtodocs.s3.amazonaws.com/call-tracking-twiml-app.gif)
-
-See the end of the "Exposing Webhooks to Twilio" section for details on the exact URL to use in your TwiML app.
-
-### Configuration
-
-This application is configured using [dotenv](https://www.npmjs.com/package/dotenv).
-Begin by copying the example .env file to use in this application:
-
-```bash
-cp .env.example .env
-```
-
-Next, open the `.env` at the root of the project and update it with credentials
-from your [Twilio account](https://www.twilio.com/user/account/voice-messaging)
-and local configuration. You will also need to set `MONGO_URL`, which is how we
-will connect to our database.
-
-This sample application stores data in a MongoDB database using
-[Mongoose](http://mongoosejs.com/). You can download and run MongoDB
+You can download and run MongoDB
 yourself ([OS X](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/),
 [Linux](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/),
 [Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)),
@@ -88,8 +28,98 @@ mongod
 ```
 
 By default, there will be a local database running that's not password protected.
-In your `.env` file, set `MONGO_URL` to `mongodb://127.0.0.1/calltracking`. You
-should now be all set to run the app locally!
+In your `.env` file, set `MONGO_URL` to `mongodb://127.0.0.1/calltracking`.
+
+### Install Dependencies
+
+Navigate to the project directory in your terminal and run:
+
+```bash
+npm install
+```
+
+### Prepare Twilio account
+
+NOTE: This project requires a handful of Twilio components.  In order to keep them organized, it can be helpful to use a subaccount.
+
+You will need to get the following information from the Twilio console and set them in the .env file (see Configuration section below):
+
+Account Sid and Auth Token
+These are located on the home page of your account (or subaccount).
+
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=xyxyxyxyxyxyxyxyxyxyxyxyxyxyx
+
+Api Key and Secret
+TWILIO_API_KEY=SKxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_API_SECRET=xyxyxyxyxyxyxyxyxyxyxyxyxyxyx
+
+TwiML App, for calls
+TWILIO_APP_SID=APxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+TwiML App, for the Agent (Twilio Client)
+TWILIO_CLIENT_APP_SID=APxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+## Sync setup
+Twilio Sync is in developer preview.  Contact Twilio's sales department to get access.
+
+You will need the api key and secret you created earlier:
+TWILIO_API_KEY
+TWILIO_API_SECRET
+
+Use your TWILIO_API_KEY and TWILIO_API_SECRET to generate a Sync service.  The result of this command will have a sid that will be the TWILIO_SYNC_SERVICE_SID
+
+```bash
+curl -X POST https://preview.twilio.com/Sync/Services \
+ -d 'FriendlyName=CallTrackingSyncService' \
+ -u '$TWILIO_API_KEY:$TWILIO_API_SECRET'
+ ```
+
+TWILIO_SYNC_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+A phone number for incoming calls to the Agent (optional)
+TWILIO_CLIENT_CALLER_ID=
+
+The phone number for dialing into an IVR
+IVR_NUMBER=
+
+(optional) define the the Twilio Client agent name here.  Defaults to 'Agent'
+AGENT_NAME=
+
+The base url where this app is running.
+BASE_URL=https://twilio-call-tracking.herokuapp.com
+
+Your Google Analytics Id, injected into the /ad page
+GA_ID=
+
+MongoDb url, described above:
+MONGO_URL=mongodb://127.0.0.1/calltracking
+
+
+
+## AddOns
+Enable these add-ons for incoming calls and lookups:
+
+Marchex Clean Call
+Whitepages Pro Caller Id
+Advanced Caller Id by Next Caller - Incoming Voice Call
+VoiceBase High Accuracy Transcription
+
+
+### Configuration
+
+This application is configured using [dotenv](https://www.npmjs.com/package/dotenv).
+Begin by copying the example .env file to use in this application:
+
+```bash
+cp .env.example .env
+```
+
+Next, open the `.env` at the root of the project and update it with credentials
+from your Twilio account. You will also need to set `MONGO_URL`, which is how we
+will connect to our database.
 
 ### Running the Project
 
@@ -103,13 +133,6 @@ npm install -g nodemon
 nodemon .
 ```
 
-### Running Tests
-
-Basic functional tests (requires local MongoDB) can be run with:
-
-```bash
-npm test
-```
 
 ### Exposing Webhooks to Twilio
 
@@ -127,17 +150,8 @@ ngrok http -subdomain=chunky-danger-monkey 3000
 ```
 
 In your Twilio app configuration you'll need to set
-`http://<your-ngrok-domain>.ngrok.io/call` as the callback URL. Open
-the application and then click the "App configuration" button.
+`http://<your-ngrok-domain>.ngrok.io/call` as the callback URL.
 
-![app configuration button screenshot](images/app-configuration.png)
-
-The button will take you to your TwiML call tracking
-application. Under "Voice" you will find a "Request URL" input
-box. There you should put the URL to the application's call resource
-(e.g `http://<your-ngrok-domain>.ngrok.io/call`).
-
-![webhook configuration](images/webhook.png)
 
 ## License
 

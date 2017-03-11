@@ -46,6 +46,9 @@ cfg.clientCallerId = process.env.TWILIO_CLIENT_CALLER_ID;
 // The Twilio Client agent name
 cfg.agentName = process.env.AGENT_NAME;
 
+// google analytics id
+cfg.googleAnalyticsId = process.env.GA_ID;
+
 // Twilio Sync config
 cfg.syncServiceSid = process.env.TWILIO_SYNC_SERVICE_SID;
 cfg.syncApiKey = process.env.TWILIO_API_KEY;

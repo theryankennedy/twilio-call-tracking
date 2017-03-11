@@ -5,7 +5,8 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-92199103-2', 'auto');
+// our demo ga id, set in .env file 
+ga('create', googleAnalyticsId, 'auto');
 ga('send', 'pageview');
 
 // get urlParams
@@ -26,20 +27,25 @@ var urlParams;
 // once ga is ready...
 ga(function(tracker) {
 
+  // google analytics session id
   // We save the ga clientId in our database, so if the same user
   //  shows up we give them the same phone number
   var clientId = tracker.get('clientId');
 
   // pull the callSourceId, passed from adwords.  default to 'demo'
+  // callSourceId can be added as a custom dimension in google adwords
   var defaultCallSourceId = '587575506b211b03967b1362';  // demo
   var callSourceId = urlParams.callSourceId || defaultCallSourceId;
   console.log('callSourceId: ' + callSourceId);
 
+  // keyword, passed from google ad
   var keyword = urlParams.keyword || "";
   console.log('keyword: ' + keyword);
   console.log('urlParams: ' + urlParams);
 
-   var gclid = urlParams.gclid || "";
+  // globally unique tracking parameters - adwords to analytics
+  //  enable autotagging to pass gclid
+  var gclid = urlParams.gclid || "";
   console.log('gclid: ' + gclid);
 
   // call our application backend to get a phone number and sessionId
