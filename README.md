@@ -1,6 +1,8 @@
 # Call tracking with Twilio, Node.js, and Express
 
-This application demonstrates how to use Twilio track calls and measure the effectiveness of marketing campaigns.
+This application demonstrates how to use Twilio to track calls and measure the effectiveness of marketing campaigns.
+
+NOTE:  This demo was created for use in a webinar.  It has some hardcoded things to make the webinar run smoothly.
 
 
 ## Running the Project on Your Machine
@@ -44,24 +46,25 @@ NOTE: This project requires a handful of Twilio components.  In order to keep th
 
 You will need to get the following information from the Twilio console and set them in the .env file (see Configuration section below):
 
-Account Sid and Auth Token
+#### Account Sid and Auth Token
 These are located on the home page of your account (or subaccount).
 
 TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_AUTH_TOKEN=xyxyxyxyxyxyxyxyxyxyxyxyxyxyx
 
-Api Key and Secret
+#### Api Key and Secret
+
 TWILIO_API_KEY=SKxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_SECRET=xyxyxyxyxyxyxyxyxyxyxyxyxyxyx
 
-TwiML App, for calls
+#### TwiML App, for calls
 TWILIO_APP_SID=APxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-TwiML App, for the Agent (Twilio Client)
+#### TwiML App, for the Agent (Twilio Client)
 TWILIO_CLIENT_APP_SID=APxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
-## Sync setup
+#### Sync setup
 Twilio Sync is in developer preview.  Contact Twilio's sales department to get access.
 
 You will need the api key and secret you created earlier:
@@ -82,18 +85,23 @@ TWILIO_SYNC_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 A phone number for incoming calls to the Agent (optional)
 TWILIO_CLIENT_CALLER_ID=
 
+#### IVR number
 The phone number for dialing into an IVR
 IVR_NUMBER=
 
+#### Twilio Client name
 (optional) define the the Twilio Client agent name here.  Defaults to 'Agent'
 AGENT_NAME=
 
+#### Base Url
 The base url where this app is running.
 BASE_URL=https://twilio-call-tracking.herokuapp.com
 
+#### Google Analytics Tracking Id
 Your Google Analytics Tracking Id, injected into the /ad page
 GA_ID=
 
+#### Mongo Url
 MongoDb url, described above:
 MONGO_URL=mongodb://127.0.0.1/calltracking
 
