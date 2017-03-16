@@ -12,9 +12,7 @@ This project requires [Node.js](http://nodejs.org/) 6 or greater and MongoDB.
 You can download and run MongoDB
 yourself ([OS X](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-os-x/),
 [Linux](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/),
-[Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)),
-or you can use a hosted service like
-[compose.io](https://www.compose.io/).
+[Windows](http://docs.mongodb.org/manual/tutorial/install-mongodb-on-windows/)).
 
 On OS X, the maybe the easiest way to get MongoDB running locally is to install
 via [Homebrew](http://brew.sh/).
@@ -49,27 +47,37 @@ You will need to get the following information from the Twilio console and set t
 #### Account Sid and Auth Token
 These are located on the home page of your account (or subaccount).
 
+```
 TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_AUTH_TOKEN=xyxyxyxyxyxyxyxyxyxyxyxyxyxyx
+```
 
 #### Api Key and Secret
 
+```
 TWILIO_API_KEY=SKxxxxxxxxxxxxxxxxxxxxxxxxxx
 TWILIO_API_SECRET=xyxyxyxyxyxyxyxyxyxyxyxyxyxyx
+```
 
 #### TwiML App, for calls
+```
 TWILIO_APP_SID=APxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
 
 #### TwiML App, for the Agent (Twilio Client)
+```
 TWILIO_CLIENT_APP_SID=APxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
 
 
 #### Sync setup
 Twilio Sync is in developer preview.  Contact Twilio's sales department to get access.
 
 You will need the api key and secret you created earlier:
+```
 TWILIO_API_KEY
 TWILIO_API_SECRET
+```
 
 Use your TWILIO_API_KEY and TWILIO_API_SECRET to generate a Sync service.  The result of this command will have a sid that will be the TWILIO_SYNC_SERVICE_SID
 
@@ -78,42 +86,55 @@ curl -X POST https://preview.twilio.com/Sync/Services \
  -d 'FriendlyName=CallTrackingSyncService' \
  -u '$TWILIO_API_KEY:$TWILIO_API_SECRET'
  ```
-
+```
 TWILIO_SYNC_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
+```
 
 A phone number for incoming calls to the Agent (optional)
+```
 TWILIO_CLIENT_CALLER_ID=
+```
 
 #### IVR number
 The phone number for dialing into an IVR
+```
 IVR_NUMBER=
+```
 
 #### Twilio Client name
 (optional) define the the Twilio Client agent name here.  Defaults to 'Agent'
+```
 AGENT_NAME=
+```
 
 #### Base Url
 The base url where this app is running.
+```
 BASE_URL=https://twilio-call-tracking.herokuapp.com
+```
 
 #### Google Analytics Tracking Id
 Your Google Analytics Tracking Id, injected into the /ad page
+```
 GA_ID=
+```
 
 #### Mongo Url
 MongoDb url, described above:
+```
 MONGO_URL=mongodb://127.0.0.1/calltracking
-
+```
 
 
 ## AddOns
 Enable these add-ons for incoming calls and lookups:
 
+```
 Marchex Clean Call
 Whitepages Pro Caller Id
 Advanced Caller Id by Next Caller - Incoming Voice Call
 VoiceBase High Accuracy Transcription
+```
 
 
 ### Configuration
