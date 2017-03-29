@@ -171,11 +171,11 @@ publicly accessible URL you can use to accept incoming calls or texts to your
 Twilio numbers.
 
 The following example would expose your local Node application running on port
-3000 at `http://chunky-danger-monkey.ngrok.io` (note that *reserved* subdomains
+3000 at `http://call-tracking-demo.ngrok.io` (note that *reserved* subdomains
 are a paid feature of ngrok):
 
 ```bash
-ngrok http -subdomain=chunky-danger-monkey 3000
+ngrok http -subdomain=call-tracking-demo 3000
 ```
 
 In your Twilio app configuration you'll need to set
